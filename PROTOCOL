@@ -1,0 +1,66 @@
+init
+----
+
+foo VERSION
+
+where VERSION is of the form maj.min
+
+requests
+--------
+cmd [arg...]
+
+If arguments contain spaces, they should be surrounded by double quotation marks.
+Argument strings are separated from the command and any other arguments by linear
+white-space (' ' or '\t').
+
+responses
+---------
+output + OK on success, ERR "descriptive error message" on error.
+
+commands
+--------
+
+status
+	-> songid: playlist songid of the current song stopped on or playing
+	-> state: play, stop or pause
+	-> volume: 0-100
+	-> elapsed: total time elapsed within current song
+
+volume 0-100
+	-> OK or ERR
+
+next
+	-> OK or ERR
+
+pause 0|1
+	-> OK or ERR
+
+play songid
+	-> OK or ERR
+
+previous
+	-> OK or ERR
+
+stop
+	-> OK or ERR
+
+add path
+	-> OK or ERR
+
+clear
+	-> OK or ERR
+
+delete songid
+	-> OK or ERR
+
+playlist
+	-> OK or ERR
+
+close
+	-> OK or ERR
+
+kill
+	-> OK or ERR
+
+ping
+	-> OK or ERR
