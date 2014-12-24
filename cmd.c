@@ -93,10 +93,10 @@ cmdplay(int fd, int argc, char **argv)
 	FD_SET(s->fd, &master);
 	if (s->fd > fdmax)
 		fdmax = s->fd;
-	s->state = READYTOPLAY;
+	s->state = PREPARE;
 	putcursong(s);
 
-	printf("Song %s with %d ready to play\n",
+	printf("Song %s with %d playing\n",
 	       s->path, s->id);
 }
 

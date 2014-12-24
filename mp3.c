@@ -13,6 +13,7 @@ static int
 mp3init(void)
 {
 	mpg123_init();
+
 	handle = mpg123_new(NULL, NULL);
 	if (!handle)
 		return -1;
@@ -20,43 +21,41 @@ mp3init(void)
 }
 
 static int
-mp3open(const char *path)
+mp3open(int fd)
 {
-	return mpg123_open(handle, path) != MPG123_OK ? -1 : 0;
-}
-
-static size_t
-mp3bufsz(void)
-{
-	return mpg123_outblock(handle);
+	return mpg123_open_feed(handle) != MPG123_OK ? -1 : 0;
 }
 
 static int
-mp3getfmt(long *rate, int *channels, int *bits)
+mp3decode(int fd)
 {
-	long r;
-	int  c, e;
-	int  ret;
+	unsigned char inbuf[8192];
+	unsigned char outbuf[32768];
+	ssize_t  n;
+	size_t   sz;
+	int      r;
+	long     rate;
+	int      channels, encoding, bits;
 
-	ret = mpg123_getformat(handle, &r, &c, &e);
-	if (ret != MPG123_OK)
+	n = read(fd, inbuf, sizeof(inbuf));
+	if (n < 0)
 		return -1;
-	*rate = r;
-	*channels = c;
-	*bits = mpg123_encsize(e) * 8;
-	return 0;
-}
+	if (n == 0)
+		return 0;
 
-static int
-mp3read(void *buf, size_t size)
-{
-	size_t done;
-	int    r;
-
-	r = mpg123_read(handle, buf, size, &done);
-	if (r != MPG123_OK)
-		return -1;
-	return done;
+	mpg123_feed(handle, inbuf, n);
+	r = mpg123_read(handle, outbuf, sizeof(outbuf), &sz);
+	if (r == MPG123_NEW_FORMAT) {
+		r = mpg123_getformat(handle, &rate, &channels,
+		                     &encoding);
+		if (r != MPG123_OK)
+			return -1;
+		bits = mpg123_encsize(encoding) * 8;
+		mpg123_format_none(handle);
+		mpg123_format(handle, rate, channels, encoding);
+		curoutput->open(rate, channels, bits);
+	}
+	curoutput->play(outbuf, sz);
 }
 
 static int
@@ -75,9 +74,7 @@ mp3exit(void)
 Decoder mp3decoder = {
 	.init = mp3init,
 	.open = mp3open,
-	.bufsz = mp3bufsz,
-	.getfmt = mp3getfmt,
-	.read = mp3read,
+	.decode = mp3decode,
 	.close = mp3close,
 	.exit = mp3exit
 };

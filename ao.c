@@ -21,32 +21,27 @@ aoinit(void)
 }
 
 static int
-aoputfmt(long rate, int channels, int bits)
+aoopen(long rate, int channels, int bits)
 {
 	format.rate = rate;
 	format.channels = channels;
 	format.bits = bits;
 	format.byte_format = AO_FMT_NATIVE;
 	format.matrix = 0;
-	return 0;
-}
 
-static int
-aoopen(void)
-{
 	dev = ao_open_live(driver, &format, NULL);
 	return !dev ? -1 : 0;
 }
 
 static int
-aowrite(void *buf, size_t size)
+aoplay(void *buf, size_t size)
 {
 	int r;
 
 	r = ao_play(dev, buf, size);
 	if (!r)
 		return -1;
-	return r;
+	return size;
 }
 
 static int
@@ -64,8 +59,7 @@ aoexit(void)
 Output aooutput = {
 	.init = aoinit,
 	.open = aoopen,
-	.putfmt = aoputfmt,
-	.write = aowrite,
+	.play = aoplay,
 	.close = aoclose,
 	.exit = aoexit
 };

@@ -3,7 +3,7 @@ VERSION = 0.0
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/man
 
-CFLAGS = -I/usr/local/include
+CFLAGS = -I/usr/local/include -g
 LDFLAGS = -L /usr/local/lib
 LDLIBS = -lmpg123 -lao
 

@@ -63,11 +63,6 @@ void
 doaudio(void)
 {
 	Song    *s;
-	unsigned char *buf;
-	size_t   bufsz;
-	long     rate;
-	int      channels, bits;
-	int      n;
 
 	s = getcursong();
 	if (!s)
@@ -77,30 +72,13 @@ doaudio(void)
 		return;
 
 	switch (s->state) {
-	case READYTOPLAY:
-		if (curdecoder->open(s->path) < 0)
-			errx(1, "decoder: failed to open %s", s->path);
-		if (curdecoder->getfmt(&rate, &channels, &bits) < 0)
-			errx(1, "decoder: failed to get format");
-		if (curoutput->putfmt(rate, channels, bits) < 0)
-			errx(1, "output: failed to put format");
-		if (curoutput->open() < 0)
-			errx(1, "output: failed to open output device");
+	case PREPARE:
+		curdecoder->open(s->fd);
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		bufsz = curdecoder->bufsz();
-		buf = malloc(bufsz);
-		if (!buf)
-			err(1, "malloc");
-		n = curdecoder->read(buf, bufsz);
-		if (n < 0)
-			warnx("decoder: failed to decode buffer at %p of length %zu",
-			      buf, bufsz);
-		else if (n > 0)
-			if (curoutput->write(buf, n) < 0)
-				warnx("output: failed to write buffer to output device");
-		free(buf);
+		curdecoder->decode(s->fd);
+		break;
 	}
 }
 

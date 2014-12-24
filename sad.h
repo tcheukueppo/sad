@@ -8,7 +8,7 @@ typedef struct {
 
 enum {
 	NONE,
-	READYTOPLAY,
+	PREPARE,
 	PLAYING,
 	PAUSED
 };
@@ -28,19 +28,16 @@ typedef struct {
 
 typedef struct {
 	int (*init)(void);
-	int (*open)(const char *);
-	size_t (*bufsz)(void);
-	int (*getfmt)(long *, int *, int *);
-	int (*read)(void *, size_t);
+	int (*open)(int);
+	int (*decode)(int);
 	int (*close)(void);
 	void (*exit)(void);
 } Decoder;
 
 typedef struct {
 	int (*init)(void);
-	int (*putfmt)(long, int, int);
-	int (*open)(void);
-	int (*write)(void *, size_t);
+	int (*open)(long, int, int);
+	int (*play)(void *, size_t);
 	int (*close)(void);
 	void (*exit)(void);
 } Output;
