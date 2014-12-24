@@ -1,5 +1,5 @@
 #define LEN(x) (sizeof (x) / sizeof *(x))
-#define VERSION "0.0"
+#define PROTOCOLVERSION "0.0"
 
 typedef struct {
 	char  *name;

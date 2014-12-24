@@ -99,7 +99,7 @@ doaudio(void)
 int
 main(void)
 {
-	int      listenfd, clifd, n, i;
+	int listenfd, clifd, n, i;
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
@@ -127,6 +127,7 @@ main(void)
 				FD_SET(clifd, &master);
 				if (clifd > fdmax)
 					fdmax = clifd;
+				dprintf(clifd, "sad %s\n", PROTOCOLVERSION);
 			} else {
 				if (docmd(i) < 0) {
 					close(i);
