@@ -30,13 +30,13 @@ cmdpause(int fd, int argc, char **argv)
 	int   pause;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"expected 0 or 1\"\n");
+		dprintf(fd, "ERR \"usage: pause 0|1\"\n");
 		return;
 	}
 
 	pause = atoi(argv[1]);
 	if (pause != 0 && pause != 1) {
-		dprintf(fd, "ERR \"expected 0 or 1\"\n");
+		dprintf(fd, "ERR \"usage: pause 0|1\"\n");
 		return;
 	}
 
@@ -74,7 +74,7 @@ cmdplay(int fd, int argc, char **argv)
 	int   id, i;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"expected a song id\"\n");
+		dprintf(fd, "ERR \"usage: play songid\"\n");
 		return;
 	}
 
@@ -111,13 +111,20 @@ cmdstop(int fd, int argc, char **argv)
 	Song *s;
 
 	if (argc != 1) {
-		dprintf(fd, "ERR \"no arguments expected\"\n");
+		dprintf(fd, "ERR \"usage: stop\"\n");
 		return;
 	}
 
 	s = getcursong();
-	if (s)
-		s->state = NONE;
+	if (!s) {
+		dprintf(fd, "ERR \"no song is active\"\n");
+		return;
+	}
+	curdecoder->close();
+	curoutput->close();
+	close(s->fd);
+	s->fd = -1;
+	s->state = NONE;
 	dprintf(fd, "OK\n");
 }
 
@@ -127,7 +134,7 @@ cmdadd(int fd, int argc, char **argv)
 	Song *s;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"expected path\"\n");
+		dprintf(fd, "ERR \"usage: add path\"\n");
 		return;
 	}
 	if (access(argv[1], F_OK) < 0) {
@@ -154,7 +161,7 @@ void
 cmdplaylist(int fd, int argc, char **argv)
 {
 	if (argc != 1) {
-		dprintf(fd, "ERR \"no arguments expected\"\n");
+		dprintf(fd, "ERR \"usage: playlist\"\n");
 		return;
 	}
 
