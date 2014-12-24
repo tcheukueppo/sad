@@ -22,7 +22,7 @@ mp3init(void)
 static int
 mp3open(const char *path)
 {
-	mpg123_open(handle, path) != MPG123_OK ? -1 : 0;
+	return mpg123_open(handle, path) != MPG123_OK ? -1 : 0;
 }
 
 static size_t
@@ -80,5 +80,4 @@ Decoder mp3decoder = {
 	.read = mp3read,
 	.close = mp3close,
 	.exit = mp3exit
-
 };
