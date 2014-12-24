@@ -78,10 +78,14 @@ doaudio(void)
 
 	switch (s->state) {
 	case READYTOPLAY:
-		curdecoder->open(s->path);
-		curdecoder->getfmt(&rate, &channels, &bits);
-		curoutput->putfmt(rate, channels, bits);
-		curoutput->open();
+		if (curdecoder->open(s->path) < 0)
+			errx(1, "decoder: failed to open %s", s->path);
+		if (curdecoder->getfmt(&rate, &channels, &bits) < 0)
+			errx(1, "decoder: failed to get format");
+		if (curoutput->putfmt(rate, channels, bits) < 0)
+			errx(1, "output: failed to put format");
+		if (curoutput->open() < 0)
+			errx(1, "output: failed to open output device");
 		s->state = PLAYING;
 		break;
 	case PLAYING:
@@ -90,8 +94,12 @@ doaudio(void)
 		if (!buf)
 			err(1, "malloc");
 		n = curdecoder->read(buf, bufsz);
-		if (n != 0)
-			curoutput->write(buf, n);
+		if (n < 0)
+			warnx("decoder: failed to decode buffer at %p of length %zu",
+			      buf, bufsz);
+		else if (n > 0)
+			if (curoutput->write(buf, n) < 0)
+				warnx("output: failed to write buffer to output device");
 		free(buf);
 	}
 }
@@ -108,8 +116,10 @@ main(void)
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
-	curoutput->init();
-	curdecoder->init();
+	if (curoutput->init() < 0)
+		errx(1, "output: init failed");
+	if (curdecoder->init() < 0)
+		errx(1, "decoder: init failed");
 
 	while (1) {
 		rfds = master;

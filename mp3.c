@@ -12,16 +12,17 @@ static mpg123_handle *handle;
 static int
 mp3init(void)
 {
-	int error;
-
 	mpg123_init();
-	handle = mpg123_new(NULL, &error);
+	handle = mpg123_new(NULL, NULL);
+	if (!handle)
+		return -1;
+	return 0;
 }
 
 static int
 mp3open(const char *path)
 {
-	mpg123_open(handle, path);
+	mpg123_open(handle, path) != MPG123_OK ? -1 : 0;
 }
 
 static size_t
@@ -35,8 +36,11 @@ mp3getfmt(long *rate, int *channels, int *bits)
 {
 	long r;
 	int  c, e;
+	int  ret;
 
-	mpg123_getformat(handle, &r, &c, &e);
+	ret = mpg123_getformat(handle, &r, &c, &e);
+	if (ret != MPG123_OK)
+		return -1;
 	*rate = r;
 	*channels = c;
 	*bits = mpg123_encsize(e) * 8;
@@ -50,15 +54,15 @@ mp3read(void *buf, size_t size)
 	int    r;
 
 	r = mpg123_read(handle, buf, size, &done);
-	if (r == MPG123_OK)
-		return done;
-	return 0;
+	if (r != MPG123_OK)
+		return -1;
+	return done;
 }
 
 static int
 mp3close(void)
 {
-	mpg123_close(handle);
+	return mpg123_close(handle) != MPG123_OK ? -1 : 0;
 }
 
 static void
