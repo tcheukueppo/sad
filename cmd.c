@@ -2,6 +2,7 @@
 
 #include <fcntl.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -243,6 +244,7 @@ cmdclose(int fd, int argc, char **argv)
 static void
 cmdkill(int fd, int argc, char **argv)
 {
+	raise(SIGTERM);
 }
 
 static void
