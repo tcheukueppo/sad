@@ -50,7 +50,7 @@ wavopen(const char *name)
 		goto err0;
 	}
 
-	if (output->open(16, sfinfo.samplerate, sfinfo.channels) < 0)
+	if (output->open(bits, sfinfo.samplerate, sfinfo.channels) < 0)
 		goto err0;
 
 	return 0;
