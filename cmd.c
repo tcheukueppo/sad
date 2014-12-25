@@ -49,12 +49,7 @@ cmdnext(int fd, int argc, char **argv)
 		return;
 	}
 
-	next = getnextsong(s);
-	if (!next) {
-		dprintf(fd, "ERR \"invalid song id\"\n");
-		return;
-	}
-
+	next = getnextsong();
 	decoder->close();
 	s->state = NONE;
 	next->state = PREPARE;
@@ -148,12 +143,7 @@ cmdprev(int fd, int argc, char **argv)
 		return;
 	}
 
-	prev = getprevsong(s);
-	if (!prev) {
-		dprintf(fd, "ERR \"invalid song id\"\n");
-		return;
-	}
-
+	prev = getprevsong();
 	decoder->close();
 	s->state = NONE;
 	prev->state = PREPARE;
