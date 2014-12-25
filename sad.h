@@ -48,6 +48,9 @@ extern int      fdmax;
 extern Output  *output;
 extern Decoder *decoder;
 
+/* cmd.c */
+int docmd(int);
+
 /* playlist.c */
 Song *addplaylist(const char *);
 Song *findsong(const char *);

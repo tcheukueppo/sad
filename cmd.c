@@ -188,7 +188,7 @@ Cmd cmds[] = {
 };
 
 /* shamelessly taken from isakmpd ui.c */
-void
+int
 docmd(int clifd)
 {
 	static  char *buf = 0;
@@ -221,10 +221,8 @@ docmd(int clifd)
 		sz *= 2;
 	}
 	n = read(clifd, p, resid);
-	if (n == -1)
-		err(1, "read");
-	if (!n)
-		return;
+	if (n <= 0)
+		return -1;
 	resid -= n;
 	while (n--) {
 		/*
@@ -247,4 +245,5 @@ docmd(int clifd)
 		}
 		p++;
 	}
+	return 0;
 }
