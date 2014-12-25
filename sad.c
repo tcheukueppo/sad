@@ -15,13 +15,13 @@
 fd_set   master;
 fd_set   rfds;
 int      fdmax;
-Output  *curoutput = &aooutput;
-Decoder *curdecoder = &mp3decoder;
+Output  *output = &sndiooutput;
+Decoder *decoder = &wavdecoder;
 
 int
 servlisten(const char *name)
 {
-	struct sockaddr_un sa;
+	struct sockaddr_un sun;
 	int    listenfd, r, len;
 
 	listenfd = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -30,12 +30,12 @@ servlisten(const char *name)
 
 	unlink(name);
 
-	memset(&sa, 0, sizeof(sa));
-	sa.sun_family = AF_UNIX;
-	strcpy(sa.sun_path, name);
+	memset(&sun, 0, sizeof(sun));
+	sun.sun_family = AF_UNIX;
+	strlcpy(sun.sun_path, name, sizeof(sun.sun_path));
 
-	len = strlen(sa.sun_path) + sizeof(sa.sun_family);
-	r = bind(listenfd, (struct sockaddr *)&sa, len);
+	len = sizeof(sun);
+	r = bind(listenfd, (struct sockaddr *)&sun, len);
 	if (r < 0)
 		err(1, "bind");
 
@@ -49,11 +49,11 @@ servlisten(const char *name)
 int
 servaccept(int listenfd)
 {
-	struct sockaddr_un sa;
+	struct sockaddr_un sun;
 	int    clifd, len;
 
-	len = sizeof(sa);
-	clifd = accept(listenfd, (struct sockaddr *)&sa, &len);
+	len = sizeof(sun);
+	clifd = accept(listenfd, (struct sockaddr *)&sun, &len);
 	if (clifd < 0)
 		err(1, "accept");
 	return clifd;
@@ -73,11 +73,13 @@ doaudio(void)
 
 	switch (s->state) {
 	case PREPARE:
-		curdecoder->open(s->fd);
+		if (decoder->open(s->fd) < 0)
+			err(1, "decoder: failed to prepare decoding");
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		curdecoder->decode(s->fd);
+		if (decoder->decode(s->fd) < 0)
+			err(1, "decoder: failde to decode buffer");
 		break;
 	}
 }
@@ -94,9 +96,9 @@ main(void)
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
-	if (curoutput->init() < 0)
+	if (output->init() < 0)
 		errx(1, "output: init failed");
-	if (curdecoder->init() < 0)
+	if (decoder->init() < 0)
 		errx(1, "decoder: init failed");
 
 	while (1) {

@@ -120,8 +120,8 @@ cmdstop(int fd, int argc, char **argv)
 		dprintf(fd, "ERR \"no song is active\"\n");
 		return;
 	}
-	curdecoder->close();
-	curoutput->close();
+	decoder->close();
+	output->close();
 	close(s->fd);
 	s->fd = -1;
 	s->state = NONE;

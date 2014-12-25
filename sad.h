@@ -36,17 +36,18 @@ typedef struct {
 
 typedef struct {
 	int (*init)(void);
-	int (*open)(long, int, int);
-	int (*play)(void *, size_t);
+	int (*open)(int, int, int);
+	void (*play)(void *, size_t);
 	int (*close)(void);
 	void (*exit)(void);
 } Output;
 
-/* ao.c */
-extern Output aooutput;
-
-/* mp3.c */
-extern Decoder mp3decoder;
+/* sad.c */
+extern fd_set   master;
+extern fd_set   rfds;
+extern int      fdmax;
+extern Output  *output;
+extern Decoder *decoder;
 
 /* playlist.c */
 Song *addplaylist(const char *);
@@ -55,12 +56,11 @@ Song *findsongid(int);
 Song *getcursong(void);
 void putcursong(Song *);
 
-/* sad.c */
-extern fd_set   master;
-extern fd_set   rfds;
-extern int      fdmax;
-extern Output  *curoutput;
-extern Decoder *curdecoder;
+/* wav.c */
+extern Decoder wavdecoder;
+
+/* sndio.c */
+extern Output sndiooutput;
 
 /* tokenizer.c */
 int gettokens(char *, char **, int, char *);
