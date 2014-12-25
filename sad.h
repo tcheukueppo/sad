@@ -57,6 +57,7 @@ int initplaylist(void);
 Song *addplaylist(const char *);
 Song *findsong(const char *);
 Song *findsongid(int);
+Song *getnextsong(Song *);
 Song *getcursong(void);
 void putcursong(Song *);
 void dumpplaylist(int);

@@ -35,6 +35,30 @@ cmdvolume(int fd, int argc, char **argv)
 static void
 cmdnext(int fd, int argc, char **argv)
 {
+	Song *s, *next;
+
+	if (argc != 1) {
+		dprintf(fd, "ERR \"usage: next\"\n");
+		return;
+	}
+
+	s = getcursong();
+	if (!s) {
+		dprintf(fd, "ERR \"no song active\"\n");
+		return;
+	}
+
+	next = getnextsong(s);
+	if (!next) {
+		dprintf(fd, "ERR \"invalid song id\"\n");
+		return;
+	}
+
+	decoder->close();
+	s->state = NONE;
+	next->state = PREPARE;
+	putcursong(next);
+	dprintf(fd, "OK\n");
 }
 
 static void

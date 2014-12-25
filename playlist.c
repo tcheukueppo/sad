@@ -57,6 +57,27 @@ findsongid(int id)
 }
 
 Song *
+getnextsong(Song *cur)
+{
+	Song *s;
+	int   i;
+
+	for (i = 0; i < playlist.nsongs; i++) {
+		s = &playlist.songs[i];
+		if (s->id == cur->id) {
+			break;
+		}
+	}
+	if (i == playlist.nsongs)
+		return NULL;
+	if (i == playlist.nsongs - 1)
+		s = &playlist.songs[0];
+	else
+		s = &playlist.songs[i + 1];
+	return s;
+}
+
+Song *
 getcursong(void)
 {
 	return playlist.cursong;
