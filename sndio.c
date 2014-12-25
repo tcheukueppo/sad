@@ -45,29 +45,28 @@ sndioopen(int bits, int rate, int channels)
 
 	if (!sio_setpar(hdl, &par) || !sio_getpar(hdl, &par)) {
 		warnx("sio_{set,get}par: failed");
-		sio_close(hdl);
-		hdl = NULL;
-		return -1;
+		goto err0;
 	}
 
 	if (par.bits != bits || par.rate != rate ||
 	    par.pchan != channels || par.le != SIO_LE_NATIVE ||
 	    par.sig != 1) {
 		warnx("unsupported audio params");
-		sio_close(hdl);
-		hdl = NULL;
-		return -1;
+		goto err0;
 	}
 
 	if (!sio_start(hdl)) {
 		warnx("sio_start: failed");
-		sio_close(hdl);
-		hdl = NULL;
-		return -1;
+		goto err0;
 	}
 
 	puts("Opened sndio output");
 	return 0;
+
+err0:
+	sio_close(hdl);
+	hdl = NULL;
+	return -1;
 }
 
 static void

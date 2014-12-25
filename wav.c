@@ -26,6 +26,12 @@ wavopen(const char *name)
 		return -1;
 	}
 
+	if (sfinfo.channels < 1 || sfinfo.channels > 2) {
+		warnx("sfinfo: unsupported number of channels %d",
+		      sfinfo.channels);
+		goto err0;
+	}
+
 	switch (sfinfo.format & 0xff) {
 	case SF_FORMAT_PCM_S8:
 		bits = 8;
@@ -41,12 +47,17 @@ wavopen(const char *name)
 		break;
 	default:
 		warnx("sfinfo: unsupported format");
-		sf_close(sf);
-		sf = NULL;
-		return -1;
+		goto err0;
 	}
 
-	return output->open(16, sfinfo.samplerate, sfinfo.channels);
+	if (output->open(16, sfinfo.samplerate, sfinfo.channels) < 0)
+		goto err0;
+
+	return 0;
+err0:
+	sf_close(sf);
+	sf = NULL;
+	return -1;
 }
 
 static int
