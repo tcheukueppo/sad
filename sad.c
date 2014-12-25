@@ -104,7 +104,7 @@ main(void)
 	while (1) {
 		rfds = master;
 		tv.tv_sec = 0;
-		tv.tv_usec = 1000;
+		tv.tv_usec = 10000;
 		n = select(fdmax + 1, &rfds, NULL, NULL, &tv);
 		if (n < 0)
 			err(1, "select");
