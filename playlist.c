@@ -9,7 +9,7 @@
 static Playlist playlist;
 static int      rollingid;
 
-void
+int
 initplaylist(void)
 {
 }

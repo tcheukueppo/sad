@@ -9,12 +9,12 @@
 
 #include "sad.h"
 
-void
+static void
 cmdstatus(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdvolume(int fd, int argc, char **argv)
 {
 	int vol;
@@ -32,12 +32,12 @@ cmdvolume(int fd, int argc, char **argv)
 	output->vol(vol);
 }
 
-void
+static void
 cmdnext(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdpause(int fd, int argc, char **argv)
 {
 	Song *s;
@@ -76,7 +76,7 @@ cmdpause(int fd, int argc, char **argv)
 	dprintf(fd, "OK\n");
 }
 
-void
+static void
 cmdplay(int fd, int argc, char **argv)
 {
 	Song *s, *cur;
@@ -107,12 +107,12 @@ cmdplay(int fd, int argc, char **argv)
 	       s->path, s->id);
 }
 
-void
+static void
 cmdprev(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdstop(int fd, int argc, char **argv)
 {
 	Song *s;
@@ -132,7 +132,7 @@ cmdstop(int fd, int argc, char **argv)
 	dprintf(fd, "OK\n");
 }
 
-void
+static void
 cmdadd(int fd, int argc, char **argv)
 {
 	Song *s;
@@ -151,7 +151,7 @@ cmdadd(int fd, int argc, char **argv)
 	dprintf(fd, "OK\n");
 }
 
-void
+static void
 cmdclear(int fd, int argc, char **argv)
 {
 	Song *s;
@@ -170,12 +170,12 @@ cmdclear(int fd, int argc, char **argv)
 	dprintf(fd, "OK\n");
 }
 
-void
+static void
 cmddelete(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdplaylist(int fd, int argc, char **argv)
 {
 	if (argc != 1) {
@@ -187,23 +187,23 @@ cmdplaylist(int fd, int argc, char **argv)
 	dprintf(fd, "OK\n");
 }
 
-void
+static void
 cmdclose(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdkill(int fd, int argc, char **argv)
 {
 }
 
-void
+static void
 cmdping(int fd, int argc, char **argv)
 {
 	dprintf(fd, "OK\n");
 }
 
-Cmd cmds[] = {
+static Cmd cmds[] = {
 	{ "status",   cmdstatus   },
 	{ "volume",   cmdvolume   },
 	{ "next",     cmdnext     },

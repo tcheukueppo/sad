@@ -18,7 +18,7 @@ int      fdmax;
 Output  *output = &sndiooutput;
 Decoder *decoder = &wavdecoder;
 
-int
+static int
 servlisten(const char *name)
 {
 	struct sockaddr_un sun;
@@ -46,7 +46,7 @@ servlisten(const char *name)
 	return listenfd;
 }
 
-int
+static int
 servaccept(int listenfd)
 {
 	struct sockaddr_un sun;
@@ -59,7 +59,7 @@ servaccept(int listenfd)
 	return clifd;
 }
 
-void
+static void
 doaudio(void)
 {
 	Song *s;
