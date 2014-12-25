@@ -20,7 +20,7 @@ typedef struct {
 } Song;
 
 typedef struct {
-	Song   songs[128];
+	Song   songs[4096];
 	Song  *cursong;
 	size_t nsongs;
 } Playlist;

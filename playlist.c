@@ -19,6 +19,7 @@ addplaylist(const char *path)
 {
 	Song  *s;
 
+	/* TODO: should expand the array dynamically */
 	s = &playlist.songs[playlist.nsongs];
 	strncpy(s->path, path, sizeof(s->path));
 	s->path[sizeof(s->path) - 1] = '\0';
