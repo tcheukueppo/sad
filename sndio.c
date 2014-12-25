@@ -18,9 +18,11 @@ sndioinit(void)
 static int
 sndiovol(int vol)
 {
-	if (!sio_setvol(hdl, (SIO_MAXVOL * vol) / 100)) {
-		warnx("sio_setvol: failed");
-		return -1;
+	if (hdl) {
+		if (!sio_setvol(hdl, (SIO_MAXVOL * vol) / 100)) {
+			warnx("sio_setvol: failed");
+			return -1;
+		}
 	}
 	return 0;
 }
