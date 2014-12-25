@@ -66,7 +66,7 @@ cmdpause(int fd, int argc, char **argv)
 void
 cmdplay(int fd, int argc, char **argv)
 {
-	Song *s;
+	Song *s, *cur;
 	int   id, i;
 
 	if (argc != 2) {
@@ -79,6 +79,12 @@ cmdplay(int fd, int argc, char **argv)
 	if (!s) {
 		dprintf(fd, "ERR \"invalid id\"\n");
 		return;
+	}
+
+	cur = getcursong();
+	if (cur) {
+		decoder->close();
+		cur->state = NONE;
 	}
 
 	s->state = PREPARE;
