@@ -1,9 +1,9 @@
 init
 ----
 
-foo VERSION
+foo PROTOCOLVERSION
 
-where VERSION is of the form maj.min
+where PROTOCOLVERSION is of the form maj.min
 
 requests
 --------
@@ -25,6 +25,7 @@ status
 	-> state: play, stop or pause
 	-> volume: 0-100
 	-> elapsed: total time elapsed within current song
+	-> duration: total song duration
 
 volume 0-100
 	-> OK or ERR
