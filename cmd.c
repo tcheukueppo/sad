@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "sad.h"
@@ -185,27 +187,64 @@ Cmd cmds[] = {
 	{ "ping",     cmdping     },
 };
 
-/* 0 on success, -1 on error or EOF */
-int
+/* shamelessly taken from isakmpd ui.c */
+void
 docmd(int clifd)
 {
-	char    buf[BUFSIZ];
-	int     i;
+	static  char *buf = 0;
+	static  char *p;
+	static  size_t sz;
+	static  size_t resid;
 	ssize_t n;
+	char   *new_buf;
+	int     i;
 	int     argc;
 	char   *argv[2];
 
-	n = read(clifd, buf, sizeof(buf) - 1);
-	if (n <= 0)
-		return -1;
-	buf[n] = '\0';
-
-	argc = tokenize(buf, argv, 2);
-	for (i = 0; i < LEN(cmds); i++) {
-		if (!strcmp(cmds[i].name, argv[0])) {
-			cmds[i].fn(clifd, argc, argv);
-			break;
-		}
+	/* If no buffer, set it up.  */
+	if (!buf) {
+		sz = 1024;
+		buf = malloc(sz);
+		if (!buf)
+			err(1, "malloc");
+		p = buf;
+		resid = sz;
 	}
-	return 0;
+	/* If no place left in the buffer reallocate twice as large.  */
+	if (!resid) {
+		new_buf = reallocarray(buf, sz, 2);
+		if (!new_buf)
+			err(1, "reallocarray");
+		buf = new_buf;
+		p = buf + sz;
+		resid = sz;
+		sz *= 2;
+	}
+	n = read(clifd, p, resid);
+	if (n == -1)
+		err(1, "read");
+	if (!n)
+		return;
+	resid -= n;
+	while (n--) {
+		/*
+		 * When we find a newline, cut off the line and feed it to the
+		 * command processor.  Then move the rest up-front.
+		 */
+		if (*p == '\n') {
+			*p = '\0';
+			argc = tokenize(buf, argv, 2);
+			for (i = 0; i < LEN(cmds); i++) {
+				if (!strcmp(cmds[i].name, argv[0])) {
+					cmds[i].fn(clifd, argc, argv);
+					break;
+				}
+			}
+			memmove(buf, p + 1, n);
+			p = buf;
+			resid = sz - n;
+			continue;
+		}
+		p++;
+	}
 }
