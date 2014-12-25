@@ -7,6 +7,7 @@
 #include "sad.h"
 
 static Playlist playlist;
+static int      rollingid;
 
 void
 initplaylist(void)
@@ -17,7 +18,6 @@ Song *
 addplaylist(const char *path)
 {
 	Song  *s;
-	static int rollingid = 0;
 
 	s = &playlist.songs[playlist.nsongs];
 	strncpy(s->path, path, sizeof(s->path));
@@ -69,7 +69,7 @@ putcursong(Song *s)
 }
 
 void
-playlistdump(int fd)
+dumpplaylist(int fd)
 {
 	Song *s;
 	int   i;
@@ -78,4 +78,11 @@ playlistdump(int fd)
 		s = &playlist.songs[i];
 		dprintf(fd, "%d: %s\n", s->id, s->path);
 	}
+}
+
+void
+clearplaylist(void)
+{
+	playlist.nsongs = 0;
+	rollingid = 0;
 }

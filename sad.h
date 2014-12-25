@@ -58,6 +58,8 @@ Song *findsong(const char *);
 Song *findsongid(int);
 Song *getcursong(void);
 void putcursong(Song *);
+void dumpplaylist(int);
+void clearplaylist(void);
 
 /* wav.c */
 extern Decoder wavdecoder;

@@ -154,6 +154,20 @@ cmdadd(int fd, int argc, char **argv)
 void
 cmdclear(int fd, int argc, char **argv)
 {
+	Song *s;
+
+	if (argc != 1) {
+		dprintf(fd, "ERR \"usage: clear\"\n");
+		return;
+	}
+
+	s = getcursong();
+	if (s) {
+		decoder->close();
+		s->state = NONE;
+	}
+	clearplaylist();
+	dprintf(fd, "OK\n");
 }
 
 void
@@ -169,7 +183,7 @@ cmdplaylist(int fd, int argc, char **argv)
 		return;
 	}
 
-	playlistdump(fd);
+	dumpplaylist(fd);
 	dprintf(fd, "OK\n");
 }
 
@@ -231,9 +245,9 @@ docmd(int clifd)
 	}
 	/* If no place left in the buffer reallocate twice as large.  */
 	if (!resid) {
-		new_buf = reallocarray(buf, sz, 2);
+		new_buf = realloc(buf, sz * 2);
 		if (!new_buf)
-			err(1, "reallocarray");
+			err(1, "realloc");
 		buf = new_buf;
 		p = buf + sz;
 		resid = sz;
