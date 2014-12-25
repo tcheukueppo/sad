@@ -238,6 +238,8 @@ docmd(int clifd)
 					break;
 				}
 			}
+			if (i == LEN(cmds))
+				dprintf(clifd, "ERR \"unknown command\"\n");
 			memmove(buf, p + 1, n);
 			p = buf;
 			resid = sz - n;
