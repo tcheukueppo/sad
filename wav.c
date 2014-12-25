@@ -1,5 +1,6 @@
 #include <sys/select.h>
 
+#include <err.h>
 #include <limits.h>
 #include <stdio.h>
 #include <sndfile.h>

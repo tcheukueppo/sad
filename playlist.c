@@ -12,6 +12,7 @@ static int      rollingid;
 int
 initplaylist(void)
 {
+	return 0;
 }
 
 Song *

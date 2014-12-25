@@ -1,5 +1,6 @@
 #include <sys/select.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/un.h>
 
 #include <err.h>
@@ -22,7 +23,8 @@ static int
 servlisten(const char *name)
 {
 	struct sockaddr_un sun;
-	int    listenfd, r, len;
+	int    listenfd, r;
+	socklen_t len;
 
 	listenfd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (listenfd < 0)
@@ -50,7 +52,8 @@ static int
 servaccept(int listenfd)
 {
 	struct sockaddr_un sun;
-	int    clifd, len;
+	int    clifd;
+	socklen_t len;
 
 	len = sizeof(sun);
 	clifd = accept(listenfd, (struct sockaddr *)&sun, &len);

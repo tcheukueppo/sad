@@ -78,6 +78,7 @@ sndioclose(void)
 		sio_close(hdl);
 	hdl = NULL;
 	puts("Closed sndio output");
+	return 0;
 }
 
 Output sndiooutput = {

@@ -1,5 +1,6 @@
 #include <sys/select.h>
 
+#include <err.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <signal.h>
@@ -61,7 +62,6 @@ static void
 cmdpause(int fd, int argc, char **argv)
 {
 	Song *s;
-	int   i;
 	int   pause;
 
 	if (argc != 2) {
@@ -100,7 +100,7 @@ static void
 cmdplay(int fd, int argc, char **argv)
 {
 	Song *s, *cur;
-	int   id, i;
+	int   id;
 
 	if (argc != 2) {
 		dprintf(fd, "ERR \"usage: play songid\"\n");
