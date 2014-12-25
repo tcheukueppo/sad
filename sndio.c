@@ -16,6 +16,13 @@ sndioinit(void)
 }
 
 static int
+sndiovol(int vol)
+{
+	sio_setvol(hdl, (SIO_MAXVOL * vol) / 100);
+	return 0;
+}
+
+static int
 sndioopen(int bits, int rate, int channels)
 {
 	struct sio_par par;
@@ -82,6 +89,7 @@ sndioexit(void)
 
 Output sndiooutput = {
 	.init = sndioinit,
+	.vol = sndiovol,
 	.open = sndioopen,
 	.play = sndioplay,
 	.close = sndioclose,

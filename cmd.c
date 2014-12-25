@@ -17,6 +17,19 @@ cmdstatus(int fd, int argc, char **argv)
 void
 cmdvolume(int fd, int argc, char **argv)
 {
+	int vol;
+
+	if (argc != 2) {
+		dprintf(fd, "ERR \"usage: volume [0-100]\"\n");
+		return;
+	}
+
+	vol = atoi(argv[1]);
+	if (vol < 0 || vol > 100) {
+		dprintf(fd, "ERR \"volume should be between [0, 100]\"\n");
+		return;
+	}
+	output->vol(vol);
 }
 
 void

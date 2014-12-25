@@ -35,6 +35,7 @@ typedef struct {
 
 typedef struct {
 	int (*init)(void);
+	int (*vol)(int);
 	int (*open)(int, int, int);
 	void (*play)(void *, size_t);
 	int (*close)(void);
