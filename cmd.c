@@ -203,7 +203,7 @@ docmd(int clifd)
 
 	/* If no buffer, set it up.  */
 	if (!buf) {
-		sz = 1024;
+		sz = BUFSIZ;
 		buf = malloc(sz);
 		if (!buf)
 			err(1, "malloc");
