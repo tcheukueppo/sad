@@ -65,9 +65,8 @@ getnextsong(Song *cur)
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = &playlist.songs[i];
-		if (s->id == cur->id) {
+		if (s->id == cur->id)
 			break;
-		}
 	}
 	if (i == playlist.nsongs)
 		return NULL;
@@ -86,9 +85,8 @@ getprevsong(Song *cur)
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = &playlist.songs[i];
-		if (s->id == cur->id) {
+		if (s->id == cur->id)
 			break;
-		}
 	}
 	if (i == playlist.nsongs)
 		return NULL;
