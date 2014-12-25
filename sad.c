@@ -70,11 +70,14 @@ doaudio(void)
 
 	switch (s->state) {
 	case PREPARE:
-		decoder->open(s->path);
+		if (decoder->open(s->path) < 0) {
+			s->state = NONE;
+			return;
+		}
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if (decoder->decode() == 0) {
+		if (decoder->decode() <= 0) {
 			decoder->close();
 			s->state = NONE;
 		}
