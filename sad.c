@@ -88,8 +88,8 @@ doaudio(void)
 int
 main(void)
 {
-	int    listenfd, clifd, n, i;
 	struct timeval tv;
+	int    listenfd, clifd, n, i;
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
