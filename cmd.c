@@ -134,6 +134,30 @@ cmdplay(int fd, int argc, char **argv)
 static void
 cmdprev(int fd, int argc, char **argv)
 {
+	Song *s, *prev;
+
+	if (argc != 1) {
+		dprintf(fd, "ERR \"usage: prev\"\n");
+		return;
+	}
+
+	s = getcursong();
+	if (!s) {
+		dprintf(fd, "ERR \"no song active\"\n");
+		return;
+	}
+
+	prev = getprevsong(s);
+	if (!prev) {
+		dprintf(fd, "ERR \"invalid song id\"\n");
+		return;
+	}
+
+	decoder->close();
+	s->state = NONE;
+	prev->state = PREPARE;
+	putcursong(prev);
+	dprintf(fd, "OK\n");
 }
 
 static void
