@@ -5,7 +5,7 @@ MANPREFIX = $(PREFIX)/man
 
 CFLAGS = -I/usr/local/include -g
 LDFLAGS = -L /usr/local/lib
-LDLIBS = -lsndio
+LDLIBS = -lsndfile -lsndio
 
 OBJ = sndio.o cmd.o wav.o playlist.o sad.o tokenizer.o
 BIN = sad

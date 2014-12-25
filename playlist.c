@@ -23,7 +23,6 @@ addplaylist(const char *path)
 	strncpy(s->path, path, sizeof(s->path));
 	s->path[sizeof(s->path) - 1] = '\0';
 	s->id = rollingid++;
-	s->fd = -1;
 	s->state = 0;
 	playlist.nsongs++;
 	return s;

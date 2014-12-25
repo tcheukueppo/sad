@@ -16,7 +16,6 @@ enum {
 typedef struct {
 	char  path[PATH_MAX];
 	int   id;
-	int   fd;
 	int   state;
 } Song;
 
@@ -28,8 +27,8 @@ typedef struct {
 
 typedef struct {
 	int (*init)(void);
-	int (*open)(int);
-	int (*decode)(int);
+	int (*open)(const char *);
+	int (*decode)(void);
 	int (*close)(void);
 	void (*exit)(void);
 } Decoder;

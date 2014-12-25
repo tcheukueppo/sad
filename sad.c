@@ -62,24 +62,22 @@ servaccept(int listenfd)
 void
 doaudio(void)
 {
-	Song    *s;
+	Song *s;
 
 	s = getcursong();
 	if (!s)
 		return;
 
-	if (!FD_ISSET(s->fd, &rfds))
-		return;
-
 	switch (s->state) {
 	case PREPARE:
-		if (decoder->open(s->fd) < 0)
-			err(1, "decoder: failed to prepare decoding");
+		decoder->open(s->path);
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if (decoder->decode(s->fd) < 0)
-			err(1, "decoder: failde to decode buffer");
+		if (decoder->decode() == 0) {
+			decoder->close();
+			s->state = NONE;
+		}
 		break;
 	}
 }
@@ -87,7 +85,8 @@ doaudio(void)
 int
 main(void)
 {
-	int listenfd, clifd, n, i;
+	int    listenfd, clifd, n, i;
+	struct timeval tv;
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
@@ -96,14 +95,14 @@ main(void)
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
-	if (output->init() < 0)
-		errx(1, "output: init failed");
-	if (decoder->init() < 0)
-		errx(1, "decoder: init failed");
+	output->init();
+	decoder->init();
 
 	while (1) {
 		rfds = master;
-		n = select(fdmax + 1, &rfds, NULL, NULL, NULL);
+		tv.tv_sec = 0;
+		tv.tv_usec = 1000;
+		n = select(fdmax + 1, &rfds, NULL, NULL, &tv);
 		if (n < 0)
 			err(1, "select");
 

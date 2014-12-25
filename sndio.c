@@ -21,8 +21,10 @@ sndioopen(int bits, int rate, int channels)
 	struct sio_par par;
 
 	hdl = sio_open(SIO_DEVANY, SIO_PLAY, 0);
-	if (!hdl)
+	if (!hdl) {
+		warnx("sio_open: failed");
 		return -1;
+	}
 
 	sio_initpar(&par);
 	par.bits = bits;
@@ -31,18 +33,21 @@ sndioopen(int bits, int rate, int channels)
 	par.sig = 1;
 	par.le = SIO_LE_NATIVE;
 
-	if (!sio_setpar(hdl, &par)) {
+	if (!sio_setpar(hdl, &par) || !sio_getpar(hdl, &par)) {
+		warnx("sio_{set,get}par: failed");
 		sio_close(hdl);
 		hdl = NULL;
 		return -1;
 	}
 
 	if (!sio_start(hdl)) {
+		warnx("sio_start: failed");
 		sio_close(hdl);
 		hdl = NULL;
 		return -1;
 	}
 
+	puts("Opened sndio output");
 	return 0;
 }
 
@@ -58,6 +63,7 @@ sndioclose(void)
 	if (hdl)
 		sio_close(hdl);
 	hdl = NULL;
+	puts("Closed sndio output");
 }
 
 static void

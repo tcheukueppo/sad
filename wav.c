@@ -2,8 +2,12 @@
 
 #include <limits.h>
 #include <stdio.h>
+#include <sndfile.h>
 
 #include "sad.h"
+
+static SNDFILE *sf;
+static SF_INFO sfinfo;
 
 static int
 wavinit(void)
@@ -12,21 +16,39 @@ wavinit(void)
 }
 
 static int
-wavopen(int fd)
+wavopen(const char *name)
 {
-	return 0;
+	sf = sf_open(name, SFM_READ, &sfinfo);
+	if (!sf) {
+		warnx("sf_open_fd: failed");
+		return -1;
+	}
+	return output->open(16, sfinfo.samplerate, sfinfo.channels);
 }
 
 static int
-wavdecode(int fd)
+wavdecode(void)
 {
-	return 0;
+	sf_count_t n;
+	short      buf[2048];
+
+	n = sf_read_short(sf, buf, 2048);
+	if (n > 0)
+		output->play(buf, n * sizeof(short));
+	return n * sizeof(short);
 }
 
 static int
 wavclose(void)
 {
-	return 0;
+	int r;
+
+	r = sf_close(sf);
+	if (r != 0) {
+		warnx("sf_close: failed");
+		return -1;
+	}
+	return output->close();
 }
 
 static void

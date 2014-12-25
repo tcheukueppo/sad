@@ -48,18 +48,12 @@ cmdpause(int fd, int argc, char **argv)
 
 	switch (s->state) {
 	case PLAYING:
-		if (pause == 1) {
+		if (pause == 1)
 			s->state = PAUSED;
-			FD_CLR(s->fd, &master);
-		}
 		break;
 	case PAUSED:
-		if (pause == 0) {
+		if (pause == 0)
 			s->state = PLAYING;
-			FD_SET(s->fd, &master);
-			if (s->fd > fdmax)
-				fdmax = s->fd;
-		}
 		break;
 	}
 	printf("Song %s with id %d is %s\n",
@@ -85,14 +79,6 @@ cmdplay(int fd, int argc, char **argv)
 		return;
 	}
 
-	s->fd = open(s->path, O_RDONLY);
-	if (s->fd < 0) {
-		dprintf(fd, "ERR \"file doesn't exist\"\n");
-		return;
-	}
-	FD_SET(s->fd, &master);
-	if (s->fd > fdmax)
-		fdmax = s->fd;
 	s->state = PREPARE;
 	putcursong(s);
 
@@ -121,9 +107,6 @@ cmdstop(int fd, int argc, char **argv)
 		return;
 	}
 	decoder->close();
-	output->close();
-	close(s->fd);
-	s->fd = -1;
 	s->state = NONE;
 	dprintf(fd, "OK\n");
 }
