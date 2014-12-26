@@ -67,10 +67,10 @@ err0:
 	return -1;
 }
 
-static void
+static int
 sndioplay(void *buf, size_t size)
 {
-	sio_write(hdl, buf, size);
+	return sio_write(hdl, buf, size);
 }
 
 static int
