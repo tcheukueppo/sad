@@ -34,22 +34,26 @@ vorbisopen(const char *name)
 	r = ov_open_callbacks(fp, &vf, NULL, 0, OV_CALLBACKS_NOCLOSE);
 	if (r < 0) {
 		warnx("ov_open_callbacks: failed");
-		return -1;
+		goto err0;
 	}
 
 	vi = ov_info(&vf, -1);
 	if (!vi) {
 		warnx("ov_info: failed");
-		goto err0;
+		goto err1;
 	}
 
 	r = output->open(16, vi->rate, vi->channels);
 	if (r < 0)
-		goto err0;
+		goto err1;
 
 	return 0;
-err0:
+
+err1:
 	ov_clear(&vf);
+err0:
+	fclose(fp);
+	fp = NULL;
 	return -1;
 }
 
