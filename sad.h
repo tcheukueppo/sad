@@ -29,9 +29,9 @@ typedef struct {
 } Output;
 
 typedef struct {
-	char    path[PATH_MAX];
-	int     id;
-	int     state;
+	char     path[PATH_MAX];
+	int      id;
+	int      state;
 	Decoder *decoder;
 } Song;
 
