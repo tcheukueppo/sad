@@ -51,12 +51,15 @@ cmdnext(int fd, char *arg)
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR no song active\n");
+		dprintf(fd, "ERR playlist is empty\n");
 		return;
 	}
 
-	s->decoder->close();
-	s->state = NONE;
+	if (s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
+
 	next = getnextsong();
 	next->state = PREPARE;
 	putcursong(next);
@@ -82,7 +85,7 @@ cmdpause(int fd, char *arg)
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR no song is active\n");
+		dprintf(fd, "ERR playlist is empty\n");
 		return;
 	}
 
@@ -95,6 +98,9 @@ cmdpause(int fd, char *arg)
 		if (pause == 0)
 			s->state = PLAYING;
 		break;
+	case NONE:
+		dprintf(fd, "ERR no song is active\n");
+		return;
 	}
 	printf("Song %s with id %d is %s\n",
 	       s->path, s->id, s->state == PAUSED ? "paused" : "playing");
@@ -107,22 +113,26 @@ cmdplay(int fd, char *arg)
 	Song *s, *cur;
 	int   id;
 
-	if (!arg[0]) {
-		dprintf(fd, "ERR expected song id\n");
-		return;
-	}
-
-	id = atoi(arg);
-	s = findsongid(id);
-	if (!s) {
-		dprintf(fd, "ERR invalid song id\n");
-		return;
-	}
-
 	cur = getcursong();
-	if (cur) {
+	if (!cur) {
+		dprintf(fd, "ERR playlist is empty\n");
+		return;
+	}
+
+	if (cur->state != NONE) {
 		cur->decoder->close();
 		cur->state = NONE;
+	}
+
+	if (arg[0]) {
+		id = atoi(arg);
+		s = findsongid(id);
+		if (!s) {
+			dprintf(fd, "ERR invalid song id\n");
+			return;
+		}
+	} else {
+		s = cur;
 	}
 
 	s->state = PREPARE;
@@ -143,12 +153,15 @@ cmdprev(int fd, char *arg)
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR no song active\n");
+		dprintf(fd, "ERR playlist is empty\n");
 		return;
 	}
 
-	s->decoder->close();
-	s->state = NONE;
+	if (s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
+
 	prev = getprevsong();
 	prev->state = PREPARE;
 	putcursong(prev);
@@ -167,11 +180,15 @@ cmdstop(int fd, char *arg)
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR no song is active\n");
+		dprintf(fd, "ERR playlist is empty\n");
 		return;
 	}
-	s->decoder->close();
-	s->state = NONE;
+
+	if (s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
+
 	dprintf(fd, "OK\n");
 }
 
@@ -209,7 +226,7 @@ cmdclear(int fd, char *arg)
 	}
 
 	s = getcursong();
-	if (s) {
+	if (s && s->state != NONE) {
 		s->decoder->close();
 		s->state = NONE;
 	}

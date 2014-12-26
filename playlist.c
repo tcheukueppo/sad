@@ -39,6 +39,8 @@ addplaylist(const char *path)
 	s->id = rollingid++;
 	s->state = 0;
 	s->decoder = d;
+	if (!s->id)
+		playlist.cursong = s;
 	playlist.nsongs++;
 	return s;
 }
@@ -175,4 +177,5 @@ clearplaylist(void)
 {
 	playlist.nsongs = 0;
 	rollingid = 0;
+	playlist.cursong = NULL;
 }

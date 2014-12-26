@@ -42,6 +42,7 @@ typedef struct {
 typedef struct {
 	Song **songs;
 	Song  *cursong;
+	Song  *nextsong;
 	size_t nsongs;
 	size_t maxsongs;
 } Playlist;
