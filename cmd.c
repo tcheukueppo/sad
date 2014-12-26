@@ -229,7 +229,6 @@ cmdplaylist(int fd, char *arg)
 		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
-
 	dumpplaylist(fd);
 	dprintf(fd, "OK\n");
 }
@@ -259,6 +258,17 @@ cmdping(int fd, char *arg)
 	dprintf(fd, "pong\nOK\n");
 }
 
+static void
+cmdsearch(int fd, char *arg)
+{
+	if (!arg[0]) {
+		dprintf(fd, "ERR expects search string\n");
+		return;
+	}
+	if (searchplaylist(fd, arg) != -1)
+		dprintf(fd, "OK\n");
+}
+
 static Cmd cmds[] = {
 	{ "status",   cmdstatus   },
 	{ "volume",   cmdvolume   },
@@ -274,6 +284,7 @@ static Cmd cmds[] = {
 	{ "close",    cmdclose    },
 	{ "kill",     cmdkill     },
 	{ "ping",     cmdping     },
+	{ "search",   cmdsearch   }
 };
 
 /* shamelessly taken from isakmpd ui.c */
