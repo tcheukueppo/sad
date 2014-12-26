@@ -22,7 +22,7 @@ cmdvolume(int fd, int argc, char **argv)
 	int vol;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"usage: volume [0-100]\"\n");
+		dprintf(fd, "ERR \"expected volume\"\n");
 		return;
 	}
 
@@ -44,7 +44,7 @@ cmdnext(int fd, int argc, char **argv)
 	Song *s, *next;
 
 	if (argc != 1) {
-		dprintf(fd, "ERR \"usage: next\"\n");
+		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
 
@@ -69,13 +69,13 @@ cmdpause(int fd, int argc, char **argv)
 	int   pause;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"usage: pause 0|1\"\n");
+		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
 		return;
 	}
 
 	pause = atoi(argv[1]);
 	if (pause != 0 && pause != 1) {
-		dprintf(fd, "ERR \"usage: pause 0|1\"\n");
+		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
 		return;
 	}
 
@@ -107,14 +107,14 @@ cmdplay(int fd, int argc, char **argv)
 	int   id;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"usage: play songid\"\n");
+		dprintf(fd, "ERR \"expected song id\"\n");
 		return;
 	}
 
 	id = atoi(argv[1]);
 	s = findsongid(id);
 	if (!s) {
-		dprintf(fd, "ERR \"invalid id\"\n");
+		dprintf(fd, "ERR \"invalid song id\"\n");
 		return;
 	}
 
@@ -136,7 +136,7 @@ cmdprev(int fd, int argc, char **argv)
 	Song *s, *prev;
 
 	if (argc != 1) {
-		dprintf(fd, "ERR \"usage: prev\"\n");
+		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
 
@@ -160,7 +160,7 @@ cmdstop(int fd, int argc, char **argv)
 	Song *s;
 
 	if (argc != 1) {
-		dprintf(fd, "ERR \"usage: stop\"\n");
+		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
 
@@ -180,7 +180,7 @@ cmdadd(int fd, int argc, char **argv)
 	Song *s;
 
 	if (argc != 2) {
-		dprintf(fd, "ERR \"usage: add path\"\n");
+		dprintf(fd, "ERR \"expected file path\"\n");
 		return;
 	}
 	if (access(argv[1], F_OK) < 0) {
@@ -203,7 +203,7 @@ cmdclear(int fd, int argc, char **argv)
 	Song *s;
 
 	if (argc != 1) {
-		dprintf(fd, "ERR \"usage: clear\"\n");
+		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
 
@@ -225,7 +225,7 @@ static void
 cmdplaylist(int fd, int argc, char **argv)
 {
 	if (argc != 1) {
-		dprintf(fd, "ERR \"usage: playlist\"\n");
+		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
 
@@ -241,6 +241,10 @@ cmdclose(int fd, int argc, char **argv)
 static void
 cmdkill(int fd, int argc, char **argv)
 {
+	if (argc != 1) {
+		dprintf(fd, "ERR \"unexpected argument\"\n");
+		return;
+	}
 	raise(SIGTERM);
 }
 
