@@ -19,12 +19,12 @@ static struct {
 int
 initdecoders(void)
 {
-	int i;
+	int i, r = 0;
 
 	for (i = 0; i < LEN(Decodermap); i++)
 		if (Decodermap[i].decoder->init() < 0)
-			return -1;
-	return 0;
+			r = -1;
+	return r;
 }
 
 Decoder *
