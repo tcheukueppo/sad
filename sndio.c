@@ -17,8 +17,9 @@ sndiovol(int vol)
 			warnx("sio_setvol: failed");
 			return -1;
 		}
+		return 0;
 	}
-	return 0;
+	return -1;
 }
 
 static int

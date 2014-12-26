@@ -31,7 +31,11 @@ cmdvolume(int fd, int argc, char **argv)
 		dprintf(fd, "ERR \"volume should be between [0, 100]\"\n");
 		return;
 	}
-	output->vol(vol);
+	if (output->vol(vol) < 0) {
+		dprintf(fd, "ERR \"failed to change volume\"\n");
+		return;
+	}
+	dprintf(fd, "OK\n");
 }
 
 static void
