@@ -20,9 +20,10 @@ typedef struct {
 } Song;
 
 typedef struct {
-	Song   songs[4096];
+	Song **songs;
 	Song  *cursong;
 	size_t nsongs;
+	size_t maxsongs;
 } Playlist;
 
 typedef struct {

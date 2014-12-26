@@ -1,7 +1,9 @@
 #include <sys/select.h>
 
+#include <err.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "sad.h"
@@ -18,10 +20,19 @@ initplaylist(void)
 Song *
 addplaylist(const char *path)
 {
-	Song  *s;
+	Song *s;
+	Song **p;
 
-	/* TODO: should expand the array dynamically */
-	s = &playlist.songs[playlist.nsongs];
+	if (!playlist.nsongs || playlist.nsongs + 1 > playlist.maxsongs) {
+		playlist.maxsongs += 4096;
+		if (!(p = reallocarray(playlist.songs, playlist.maxsongs, sizeof(Song *))))
+			err(1, "reallocarray");
+		playlist.songs = p;
+	}
+	if (!(s = calloc(1, sizeof(Song))))
+		err(1, "calloc");
+
+	playlist.songs[playlist.nsongs] = s;
 	strncpy(s->path, path, sizeof(s->path));
 	s->path[sizeof(s->path) - 1] = '\0';
 	s->id = rollingid++;
@@ -37,7 +48,7 @@ findsong(const char *path)
 	int   i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
-		s = &playlist.songs[i];
+		s = playlist.songs[i];
 		if (!strcmp(s->path, path))
 			return s;
 	}
@@ -51,7 +62,7 @@ findsongid(int id)
 	int   i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
-		s = &playlist.songs[i];
+		s = playlist.songs[i];
 		if (s->id == id)
 			return s;
 	}
@@ -66,16 +77,16 @@ getnextsong(void)
 
 	cur = playlist.cursong;
 	for (i = 0; i < playlist.nsongs; i++) {
-		s = &playlist.songs[i];
+		s = playlist.songs[i];
 		if (s->id == cur->id)
 			break;
 	}
 	if (i == playlist.nsongs)
 		return NULL;
 	if (i == playlist.nsongs - 1)
-		s = &playlist.songs[0];
+		s = playlist.songs[0];
 	else
-		s = &playlist.songs[i + 1];
+		s = playlist.songs[i + 1];
 	return s;
 }
 
@@ -87,16 +98,16 @@ getprevsong(void)
 
 	cur = playlist.cursong;
 	for (i = 0; i < playlist.nsongs; i++) {
-		s = &playlist.songs[i];
+		s = playlist.songs[i];
 		if (s->id == cur->id)
 			break;
 	}
 	if (i == playlist.nsongs)
 		return NULL;
 	if (i == 0)
-		s = &playlist.songs[playlist.nsongs - 1];
+		s = playlist.songs[playlist.nsongs - 1];
 	else
-		s = &playlist.songs[i - 1];
+		s = playlist.songs[i - 1];
 	return s;
 }
 
@@ -119,7 +130,7 @@ dumpplaylist(int fd)
 	int   i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
-		s = &playlist.songs[i];
+		s = playlist.songs[i];
 		dprintf(fd, "%d: %s\n", s->id, s->path);
 	}
 }
