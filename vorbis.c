@@ -49,7 +49,7 @@ err0:
 static int
 vorbisdecode(void *buf, int nbytes)
 {
-	int  r, decoded;
+	int   r, decoded;
 	char *p = buf;
 
 	decoded = 0;
