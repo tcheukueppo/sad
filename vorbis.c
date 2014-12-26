@@ -23,7 +23,6 @@ vorbisopen(const char *name)
 	int r;
 	vorbis_info *vi;
 
-	cursect = 0;
 	r = ov_fopen(name, &vf);
 	if (r < 0) {
 		warnx("ov_fopen: failed");
@@ -70,7 +69,6 @@ vorbisclose(void)
 		r = -1;
 	if (output->close() < 0)
 		r = -1;
-	cursect = 0;
 	return r;
 }
 
