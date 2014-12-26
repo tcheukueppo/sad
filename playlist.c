@@ -20,8 +20,13 @@ initplaylist(void)
 Song *
 addplaylist(const char *path)
 {
-	Song *s;
-	Song **p;
+	Decoder *d;
+	Song    *s;
+	Song   **p;
+
+	d = matchdecoder(path);
+	if (!d)
+		return NULL;
 
 	if (!playlist.nsongs || playlist.nsongs + 1 > playlist.maxsongs) {
 		playlist.maxsongs += 4096;
@@ -37,6 +42,7 @@ addplaylist(const char *path)
 	s->path[sizeof(s->path) - 1] = '\0';
 	s->id = rollingid++;
 	s->state = 0;
+	s->decoder = d;
 	playlist.nsongs++;
 	return s;
 }

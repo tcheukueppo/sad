@@ -8,8 +8,6 @@
 
 #include "sad.h"
 
-Decoder *decoder;
-
 static struct {
 	char    *ext;
 	Decoder *decoder;
@@ -29,20 +27,17 @@ initdecoders(void)
 	return 0;
 }
 
-int
-setdecoder(const char *name)
+Decoder *
+matchdecoder(const char *name)
 {
 	char *ext;
 	int   i;
 
 	ext = strrchr(name, '.');
 	if (!ext)
-		return -1;
-	for (i = 0; i < LEN(Decodermap); i++) {
-		if (!strcasecmp(Decodermap[i].ext, ext)) {
-			decoder = Decodermap[i].decoder;
-			break;
-		}
-	}
-	return 0;
+		return NULL;
+	for (i = 0; i < LEN(Decodermap); i++)
+		if (!strcasecmp(Decodermap[i].ext, ext))
+			return Decodermap[i].decoder;
+	return NULL;
 }

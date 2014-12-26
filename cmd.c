@@ -50,11 +50,10 @@ cmdnext(int fd, int argc, char **argv)
 		return;
 	}
 
-	decoder->close();
+	s->decoder->close();
 	s->state = NONE;
 	next = getnextsong();
 	next->state = PREPARE;
-	setdecoder(next->path);
 	putcursong(next);
 	dprintf(fd, "OK\n");
 }
@@ -117,12 +116,11 @@ cmdplay(int fd, int argc, char **argv)
 
 	cur = getcursong();
 	if (cur) {
-		decoder->close();
+		cur->decoder->close();
 		cur->state = NONE;
 	}
 
 	s->state = PREPARE;
-	setdecoder(s->path);
 	putcursong(s);
 	printf("Song %s with %d playing\n",
 	       s->path, s->id);
@@ -144,11 +142,10 @@ cmdprev(int fd, int argc, char **argv)
 		return;
 	}
 
-	decoder->close();
+	s->decoder->close();
 	s->state = NONE;
 	prev = getprevsong();
 	prev->state = PREPARE;
-	setdecoder(prev->path);
 	putcursong(prev);
 	dprintf(fd, "OK\n");
 }
@@ -168,7 +165,7 @@ cmdstop(int fd, int argc, char **argv)
 		dprintf(fd, "ERR \"no song is active\"\n");
 		return;
 	}
-	decoder->close();
+	s->decoder->close();
 	s->state = NONE;
 	dprintf(fd, "OK\n");
 }
@@ -187,6 +184,10 @@ cmdadd(int fd, int argc, char **argv)
 		return;
 	}
 	s = addplaylist(argv[1]);
+	if (!s) {
+		dprintf(fd, "ERR \"cannot add %s\"\n", argv[1]);
+		return;
+	}
 	printf("Added song with path %s and id %d\n",
 	       s->path, s->id);
 	dprintf(fd, "OK\n");
@@ -204,7 +205,7 @@ cmdclear(int fd, int argc, char **argv)
 
 	s = getcursong();
 	if (s) {
-		decoder->close();
+		s->decoder->close();
 		s->state = NONE;
 	}
 	clearplaylist();

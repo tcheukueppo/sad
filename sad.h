@@ -14,19 +14,6 @@ enum {
 };
 
 typedef struct {
-	char  path[PATH_MAX];
-	int   id;
-	int   state;
-} Song;
-
-typedef struct {
-	Song **songs;
-	Song  *cursong;
-	size_t nsongs;
-	size_t maxsongs;
-} Playlist;
-
-typedef struct {
 	int (*init)(void);
 	int (*open)(const char *);
 	int (*decode)(void *, int);
@@ -40,6 +27,20 @@ typedef struct {
 	void (*play)(void *, size_t);
 	int (*close)(void);
 } Output;
+
+typedef struct {
+	char    path[PATH_MAX];
+	int     id;
+	int     state;
+	Decoder *decoder;
+} Song;
+
+typedef struct {
+	Song **songs;
+	Song  *cursong;
+	size_t nsongs;
+	size_t maxsongs;
+} Playlist;
 
 /* sad.c */
 extern fd_set   master;
@@ -76,6 +77,5 @@ int gettokens(char *, char **, int, char *);
 int tokenize(char *, char **, int);
 
 /* decoder.c */
-extern Decoder *decoder;
 int initdecoders(void);
-int setdecoder(const char *);
+Decoder *matchdecoder(const char *);

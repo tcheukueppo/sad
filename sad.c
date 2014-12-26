@@ -74,15 +74,15 @@ doaudio(void)
 
 	switch (s->state) {
 	case PREPARE:
-		if (decoder->open(s->path) < 0) {
+		if (s->decoder->open(s->path) < 0) {
 			s->state = NONE;
 			return;
 		}
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if ((nbytes = decoder->decode(buf, sizeof(buf))) <= 0) {
-			decoder->close();
+		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
+			s->decoder->close();
 			s->state = NONE;
 		} else {
 			output->play(buf, nbytes);
