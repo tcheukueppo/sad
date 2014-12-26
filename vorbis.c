@@ -27,7 +27,7 @@ vorbisopen(const char *name)
 	r = ov_fopen(name, &vf);
 	if (r < 0) {
 		warnx("ov_fopen: failed");
-		goto err0;
+		return -1;
 	}
 
 	vi = ov_info(&vf, -1);
