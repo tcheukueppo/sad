@@ -11,8 +11,8 @@ OBJ = sndio.o cmd.o mp3.o wav.o vorbis.o playlist.o sad.o tokenizer.o decoder.o
 BIN = sad
 
 # non-OpenBSD
-#OBJ += compat/reallocarray.o
-#CFLAGS += -DCOMPAT
+OBJ += compat/reallocarray.o
+CFLAGS += -DCOMPAT
 
 all: $(BIN)
 
