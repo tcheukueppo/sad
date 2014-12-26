@@ -80,6 +80,7 @@ vorbisclose(void)
 		r = -1;
 	if (output->close() < 0)
 		r = -1;
+	cursect = 0;
 	return r;
 }
 
