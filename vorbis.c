@@ -8,7 +8,6 @@
 
 #include "sad.h"
 
-static FILE *fp;
 static OggVorbis_File vf;
 static int cursect;
 
@@ -24,36 +23,27 @@ vorbisopen(const char *name)
 	int r;
 	vorbis_info *vi;
 
-	fp = fopen(name, "r");
-	if (!fp) {
-		warn("fopen %s", name);
-		return -1;
-	}
-
 	cursect = 0;
-	r = ov_open_callbacks(fp, &vf, NULL, 0, OV_CALLBACKS_NOCLOSE);
+	r = ov_fopen(name, &vf);
 	if (r < 0) {
-		warnx("ov_open_callbacks: failed");
+		warnx("ov_fopen: failed");
 		goto err0;
 	}
 
 	vi = ov_info(&vf, -1);
 	if (!vi) {
 		warnx("ov_info: failed");
-		goto err1;
+		goto err0;
 	}
 
 	r = output->open(16, vi->rate, vi->channels);
 	if (r < 0)
-		goto err1;
+		goto err0;
 
 	return 0;
 
-err1:
-	ov_clear(&vf);
 err0:
-	fclose(fp);
-	fp = NULL;
+	ov_clear(&vf);
 	return -1;
 }
 
@@ -76,10 +66,6 @@ vorbisclose(void)
 {
 	int r;
 
-	if (fp) {
-		fclose(fp);
-		fp = NULL;
-	}
 	if (ov_clear(&vf) < 0)
 		r = -1;
 	if (output->close() < 0)
