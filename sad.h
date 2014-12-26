@@ -56,7 +56,6 @@ extern Output  *output;
 int docmd(int);
 
 /* playlist.c */
-int initplaylist(void);
 Song *addplaylist(const char *);
 Song *findsong(const char *);
 Song *findsongid(int);

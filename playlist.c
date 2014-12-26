@@ -11,12 +11,6 @@
 static Playlist playlist;
 static int      rollingid;
 
-int
-initplaylist(void)
-{
-	return 0;
-}
-
 Song *
 addplaylist(const char *path)
 {
