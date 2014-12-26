@@ -62,7 +62,7 @@ servaccept(int listenfd)
 }
 
 static void
-doaudio(void)
+playaudio(void)
 {
 	Song    *s;
 	short    buf[2048];
@@ -114,7 +114,7 @@ main(void)
 		if (n < 0)
 			err(1, "select");
 
-		doaudio();
+		playaudio();
 
 		for (i = 0; i <= fdmax; i++) {
 			if (!FD_ISSET(i, &rfds))
