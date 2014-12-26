@@ -49,15 +49,22 @@ err0:
 static int
 vorbisdecode(void *buf, int nbytes)
 {
-	int r;
+	int  r, decoded;
+	char *p = buf;
 
-	r = ov_read(&vf, buf, nbytes, 0, 2, 1, &cursect);
-	if (r < 0) {
-		warnx("ov_read: failed");
-		return -1;
-	} else if (r == 0)
-		return r;
-	return r;
+	decoded = 0;
+	while (nbytes > 0) {
+		r = ov_read(&vf, &p[decoded], nbytes, 0, 2, 1, &cursect);
+		if (r < 0) {
+			warnx("ov_read: failed");
+			return -1;
+		} else if (r == 0) {
+			break;
+		}
+		decoded += r;
+		nbytes -= r;
+	}
+	return decoded;
 }
 
 static int
