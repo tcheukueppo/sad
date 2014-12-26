@@ -23,17 +23,17 @@ cmdvolume(int fd, char *arg)
 	int vol;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR \"expected volume\"\n");
+		dprintf(fd, "ERR expected volume\n");
 		return;
 	}
 
 	vol = atoi(arg);
 	if (vol < 0 || vol > 100) {
-		dprintf(fd, "ERR \"volume should be between [0, 100]\"\n");
+		dprintf(fd, "ERR volume should be between [0, 100]\n");
 		return;
 	}
 	if (output->vol(vol) < 0) {
-		dprintf(fd, "ERR \"failed to change volume\"\n");
+		dprintf(fd, "ERR failed to change volume\n");
 		return;
 	}
 	dprintf(fd, "OK\n");
@@ -45,13 +45,13 @@ cmdnext(int fd, char *arg)
 	Song *s, *next;
 
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR \"no song active\"\n");
+		dprintf(fd, "ERR no song active\n");
 		return;
 	}
 
@@ -70,19 +70,19 @@ cmdpause(int fd, char *arg)
 	int   pause;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
+		dprintf(fd, "ERR argument should be 0 or 1\n");
 		return;
 	}
 
 	pause = atoi(arg);
 	if (pause != 0 && pause != 1) {
-		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
+		dprintf(fd, "ERR argument should be 0 or 1\n");
 		return;
 	}
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR \"no song is active\"\n");
+		dprintf(fd, "ERR no song is active\n");
 		return;
 	}
 
@@ -108,14 +108,14 @@ cmdplay(int fd, char *arg)
 	int   id;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR \"expected song id\"\n");
+		dprintf(fd, "ERR expected song id\n");
 		return;
 	}
 
 	id = atoi(arg);
 	s = findsongid(id);
 	if (!s) {
-		dprintf(fd, "ERR \"invalid song id\"\n");
+		dprintf(fd, "ERR invalid song id\n");
 		return;
 	}
 
@@ -137,13 +137,13 @@ cmdprev(int fd, char *arg)
 	Song *s, *prev;
 
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR \"no song active\"\n");
+		dprintf(fd, "ERR no song active\n");
 		return;
 	}
 
@@ -161,13 +161,13 @@ cmdstop(int fd, char *arg)
 	Song *s;
 
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 
 	s = getcursong();
 	if (!s) {
-		dprintf(fd, "ERR \"no song is active\"\n");
+		dprintf(fd, "ERR no song is active\n");
 		return;
 	}
 	s->decoder->close();
@@ -181,16 +181,16 @@ cmdadd(int fd, char *arg)
 	Song *s;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR \"expected file path\"\n");
+		dprintf(fd, "ERR expected file path\n");
 		return;
 	}
 	if (access(arg, F_OK) < 0) {
-		dprintf(fd, "ERR \"file doesn't exist: %s\"\n", arg);
+		dprintf(fd, "ERR file doesn't exist: %s\n", arg);
 		return;
 	}
 	s = addplaylist(arg);
 	if (!s) {
-		dprintf(fd, "ERR \"cannot add file: %s\"\n", arg);
+		dprintf(fd, "ERR cannot add file: %s\n", arg);
 		return;
 	}
 	printf("Added song with path %s and id %d\n",
@@ -204,7 +204,7 @@ cmdclear(int fd, char *arg)
 	Song *s;
 
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 
@@ -226,7 +226,7 @@ static void
 cmdplaylist(int fd, char *arg)
 {
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 
@@ -243,7 +243,7 @@ static void
 cmdkill(int fd, char *arg)
 {
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 	raise(SIGTERM);
@@ -253,7 +253,7 @@ static void
 cmdping(int fd, char *arg)
 {
 	if (arg[0]) {
-		dprintf(fd, "ERR \"unexpected argument\"\n");
+		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
 	dprintf(fd, "pong\nOK\n");
@@ -333,7 +333,7 @@ docmd(int clifd)
 				}
 			}
 			if (i == LEN(cmds))
-				dprintf(clifd, "ERR \"unknown command\"\n");
+				dprintf(clifd, "ERR unknown command\n");
 			memmove(buf, p + 1, n);
 			p = buf;
 			resid = sz - n;
