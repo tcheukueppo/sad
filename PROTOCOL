@@ -42,7 +42,7 @@ pause 0|1
 
 play songid
 
-previous
+prev
 
 stop
 
