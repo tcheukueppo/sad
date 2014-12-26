@@ -12,8 +12,9 @@ static struct {
 	char    *ext;
 	Decoder *decoder;
 } Decodermap[] = {
-	{ ".wav", &wavdecoder },
-	{ ".mp3", &mp3decoder },
+	{ ".wav", &wavdecoder    },
+	{ ".mp3", &mp3decoder    },
+	{ ".ogg", &vorbisdecoder },
 };
 
 int

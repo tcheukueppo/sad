@@ -69,6 +69,9 @@ extern Decoder wavdecoder;
 /* mp3.c */
 extern Decoder mp3decoder;
 
+/* vorbis.c */
+extern Decoder vorbisdecoder;
+
 /* sndio.c */
 extern Output sndiooutput;
 
