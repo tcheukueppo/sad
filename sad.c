@@ -98,7 +98,6 @@ main(void)
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
-	output->init();
 	decoder->init();
 
 	while (1) {

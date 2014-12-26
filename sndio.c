@@ -10,12 +10,6 @@
 static struct sio_hdl *hdl;
 
 static int
-sndioinit(void)
-{
-	return 0;
-}
-
-static int
 sndiovol(int vol)
 {
 	if (hdl) {
@@ -86,16 +80,9 @@ sndioclose(void)
 	puts("Closed sndio output");
 }
 
-static void
-sndioexit(void)
-{
-}
-
 Output sndiooutput = {
-	.init = sndioinit,
 	.vol = sndiovol,
 	.open = sndioopen,
 	.play = sndioplay,
 	.close = sndioclose,
-	.exit = sndioexit
 };
