@@ -21,12 +21,11 @@ $(BIN): $(OBJ)
 
 sndio.o: sad.h
 cmd.o: sad.h
-wav.o: sad.h
 mp3.o: sad.h
+wav.o: sad.h
 vorbis.o: sad.h
 playlist.o: sad.h
 sad.o: sad.h
-tokenizer.o: sad.h
 decoder.o: sad.h
 
 install: all
