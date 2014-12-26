@@ -1,3 +1,7 @@
+#ifdef COMPAT
+#include "compat.h"
+#endif
+
 #define LEN(x) (sizeof (x) / sizeof *(x))
 #define PROTOCOLVERSION "0.0"
 
