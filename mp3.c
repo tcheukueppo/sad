@@ -12,10 +12,14 @@ static mpg123_handle *hdl;
 static int
 mp3init(void)
 {
-	if (mpg123_init() != MPG123_OK) {
+	int r;
+
+	r = mpg123_init();
+	if (r != MPG123_OK) {
 		warnx("mpg123_init: failed");
 		return -1;
 	}
+
 	hdl = mpg123_new(NULL, NULL);
 	if (!hdl) {
 		warnx("mpg123_new: failed");
