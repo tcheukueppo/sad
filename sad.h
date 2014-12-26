@@ -76,5 +76,6 @@ int gettokens(char *, char **, int, char *);
 int tokenize(char *, char **, int);
 
 /* decoder.c */
+extern Decoder *decoder;
 int initdecoders(void);
-Decoder *matchdecoder(const char *);
+int setdecoder(const char *);

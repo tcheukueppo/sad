@@ -65,7 +65,6 @@ static void
 doaudio(void)
 {
 	Song    *s;
-	Decoder *d;
 	short    buf[2048];
 	int      nbytes;
 
@@ -73,19 +72,17 @@ doaudio(void)
 	if (!s)
 		return;
 
-	d = matchdecoder(s->path);
-
 	switch (s->state) {
 	case PREPARE:
-		if (d->open(s->path) < 0) {
+		if (decoder->open(s->path) < 0) {
 			s->state = NONE;
 			return;
 		}
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if ((nbytes = d->decode(buf, sizeof(buf))) <= 0) {
-			d->close();
+		if ((nbytes = decoder->decode(buf, sizeof(buf))) <= 0) {
+			decoder->close();
 			s->state = NONE;
 		} else {
 			output->play(buf, nbytes);
