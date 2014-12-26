@@ -7,7 +7,7 @@
 
 typedef struct {
 	char  *name;
-	void (*fn)(int, int, char **);
+	void (*fn)(int, char *);
 } Cmd;
 
 enum {

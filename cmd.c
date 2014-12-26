@@ -1,5 +1,6 @@
 #include <sys/select.h>
 
+#include <ctype.h>
 #include <err.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -12,21 +13,21 @@
 #include "sad.h"
 
 static void
-cmdstatus(int fd, int argc, char **argv)
+cmdstatus(int fd, char *arg)
 {
 }
 
 static void
-cmdvolume(int fd, int argc, char **argv)
+cmdvolume(int fd, char *arg)
 {
 	int vol;
 
-	if (argc != 2) {
+	if (!arg[0]) {
 		dprintf(fd, "ERR \"expected volume\"\n");
 		return;
 	}
 
-	vol = atoi(argv[1]);
+	vol = atoi(arg);
 	if (vol < 0 || vol > 100) {
 		dprintf(fd, "ERR \"volume should be between [0, 100]\"\n");
 		return;
@@ -39,11 +40,11 @@ cmdvolume(int fd, int argc, char **argv)
 }
 
 static void
-cmdnext(int fd, int argc, char **argv)
+cmdnext(int fd, char *arg)
 {
 	Song *s, *next;
 
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -63,17 +64,17 @@ cmdnext(int fd, int argc, char **argv)
 }
 
 static void
-cmdpause(int fd, int argc, char **argv)
+cmdpause(int fd, char *arg)
 {
 	Song *s;
 	int   pause;
 
-	if (argc != 2) {
+	if (!arg[0]) {
 		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
 		return;
 	}
 
-	pause = atoi(argv[1]);
+	pause = atoi(arg);
 	if (pause != 0 && pause != 1) {
 		dprintf(fd, "ERR \"argument should be 0 or 1\"\n");
 		return;
@@ -101,17 +102,17 @@ cmdpause(int fd, int argc, char **argv)
 }
 
 static void
-cmdplay(int fd, int argc, char **argv)
+cmdplay(int fd, char *arg)
 {
 	Song *s, *cur;
 	int   id;
 
-	if (argc != 2) {
+	if (!arg[0]) {
 		dprintf(fd, "ERR \"expected song id\"\n");
 		return;
 	}
 
-	id = atoi(argv[1]);
+	id = atoi(arg);
 	s = findsongid(id);
 	if (!s) {
 		dprintf(fd, "ERR \"invalid song id\"\n");
@@ -131,11 +132,11 @@ cmdplay(int fd, int argc, char **argv)
 }
 
 static void
-cmdprev(int fd, int argc, char **argv)
+cmdprev(int fd, char *arg)
 {
 	Song *s, *prev;
 
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -155,11 +156,11 @@ cmdprev(int fd, int argc, char **argv)
 }
 
 static void
-cmdstop(int fd, int argc, char **argv)
+cmdstop(int fd, char *arg)
 {
 	Song *s;
 
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -175,21 +176,21 @@ cmdstop(int fd, int argc, char **argv)
 }
 
 static void
-cmdadd(int fd, int argc, char **argv)
+cmdadd(int fd, char *arg)
 {
 	Song *s;
 
-	if (argc != 2) {
+	if (!arg[0]) {
 		dprintf(fd, "ERR \"expected file path\"\n");
 		return;
 	}
-	if (access(argv[1], F_OK) < 0) {
-		dprintf(fd, "ERR \"file doesn't exist\"\n");
+	if (access(arg, F_OK) < 0) {
+		dprintf(fd, "ERR \"file doesn't exist: %s\"\n", arg);
 		return;
 	}
-	s = addplaylist(argv[1]);
+	s = addplaylist(arg);
 	if (!s) {
-		dprintf(fd, "ERR \"cannot add %s\"\n", argv[1]);
+		dprintf(fd, "ERR \"cannot add file: %s\"\n", arg);
 		return;
 	}
 	printf("Added song with path %s and id %d\n",
@@ -198,11 +199,11 @@ cmdadd(int fd, int argc, char **argv)
 }
 
 static void
-cmdclear(int fd, int argc, char **argv)
+cmdclear(int fd, char *arg)
 {
 	Song *s;
 
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -217,14 +218,14 @@ cmdclear(int fd, int argc, char **argv)
 }
 
 static void
-cmddelete(int fd, int argc, char **argv)
+cmddelete(int fd, char *arg)
 {
 }
 
 static void
-cmdplaylist(int fd, int argc, char **argv)
+cmdplaylist(int fd, char *arg)
 {
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -234,14 +235,14 @@ cmdplaylist(int fd, int argc, char **argv)
 }
 
 static void
-cmdclose(int fd, int argc, char **argv)
+cmdclose(int fd, char *arg)
 {
 }
 
 static void
-cmdkill(int fd, int argc, char **argv)
+cmdkill(int fd, char *arg)
 {
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -249,9 +250,9 @@ cmdkill(int fd, int argc, char **argv)
 }
 
 static void
-cmdping(int fd, int argc, char **argv)
+cmdping(int fd, char *arg)
 {
-	if (argc != 1) {
+	if (arg[0]) {
 		dprintf(fd, "ERR \"unexpected argument\"\n");
 		return;
 	}
@@ -284,8 +285,9 @@ docmd(int clifd)
 	static  size_t sz;
 	static  size_t resid;
 	ssize_t n;
+	size_t cmdlen;
 	char   *new_buf;
-	int     i;
+	int     i, c;
 	int     argc;
 	char   *argv[2];
 
@@ -319,10 +321,14 @@ docmd(int clifd)
 		 */
 		if (*p == '\n') {
 			*p = '\0';
-			argc = tokenize(buf, argv, 2);
 			for (i = 0; i < LEN(cmds); i++) {
-				if (!strcmp(cmds[i].name, argv[0])) {
-					cmds[i].fn(clifd, argc, argv);
+				cmdlen = strlen(cmds[i].name);
+				if (!strncmp(cmds[i].name, buf, cmdlen) &&
+				    (buf[cmdlen] == '\0' || isspace(buf[cmdlen]))) {
+					/* strip leading whitespace */
+					for (c = cmdlen; buf[c] && isspace(buf[c]); c++)
+						;
+					cmds[i].fn(clifd, &buf[c]);
 					break;
 				}
 			}
