@@ -84,6 +84,10 @@ playaudio(void)
 		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
 			s->decoder->close();
 			s->state = NONE;
+			/* default to a repeat/cycle through mode */
+			s = getnextsong();
+			s->state = PREPARE;
+			putcursong(s);
 		} else {
 			output->play(buf, nbytes);
 		}
