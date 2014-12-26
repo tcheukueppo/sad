@@ -251,7 +251,11 @@ cmdkill(int fd, int argc, char **argv)
 static void
 cmdping(int fd, int argc, char **argv)
 {
-	dprintf(fd, "OK\n");
+	if (argc != 1) {
+		dprintf(fd, "ERR \"unexpected argument\"\n");
+		return;
+	}
+	dprintf(fd, "pong\nOK\n");
 }
 
 static Cmd cmds[] = {
