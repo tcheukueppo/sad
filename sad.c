@@ -63,6 +63,8 @@ static void
 doaudio(void)
 {
 	Song *s;
+	short buf[2048];
+	int   nbytes;
 
 	s = getcursong();
 	if (!s)
@@ -77,9 +79,11 @@ doaudio(void)
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if (decoder->decode() <= 0) {
+		if ((nbytes = decoder->decode(buf, sizeof(buf))) <= 0) {
 			decoder->close();
 			s->state = NONE;
+		} else {
+			output->play(buf, nbytes);
 		}
 		break;
 	}

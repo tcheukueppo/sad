@@ -61,15 +61,9 @@ err0:
 }
 
 static int
-wavdecode(void)
+wavdecode(void *buf, int nbytes)
 {
-	sf_count_t n;
-	short      buf[2048];
-
-	n = sf_read_short(sf, buf, 2048);
-	if (n > 0)
-		output->play(buf, n * sizeof(short));
-	return n * sizeof(short);
+	return sf_read_short(sf, buf, nbytes / sizeof(short)) * sizeof(short);
 }
 
 static int

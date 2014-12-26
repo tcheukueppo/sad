@@ -28,7 +28,7 @@ typedef struct {
 typedef struct {
 	int (*init)(void);
 	int (*open)(const char *);
-	int (*decode)(void);
+	int (*decode)(void *, int);
 	int (*close)(void);
 	void (*exit)(void);
 } Decoder;
