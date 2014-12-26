@@ -70,7 +70,7 @@ vorbisdecode(void *buf, int nbytes)
 static int
 vorbisclose(void)
 {
-	int r;
+	int r = 0;
 
 	if (ov_clear(&vf) < 0)
 		r = -1;
