@@ -12,6 +12,7 @@ static struct sio_hdl *hdl;
 static int
 sndiovol(int vol)
 {
+	/* TODO: allow volume changes even if there is no active song */
 	if (hdl) {
 		if (!sio_setvol(hdl, (SIO_MAXVOL * vol) / 100)) {
 			warnx("sio_setvol: failed");
