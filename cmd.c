@@ -51,7 +51,7 @@ cmdnext(int fd, int argc, char **argv)
 	}
 
 	next = getnextsong();
-	decoder->close();
+	matchdecoder(s->path)->close();
 	s->state = NONE;
 	next->state = PREPARE;
 	putcursong(next);
@@ -116,13 +116,12 @@ cmdplay(int fd, int argc, char **argv)
 
 	cur = getcursong();
 	if (cur) {
-		decoder->close();
+		matchdecoder(cur->path)->close();
 		cur->state = NONE;
 	}
 
 	s->state = PREPARE;
 	putcursong(s);
-
 	printf("Song %s with %d playing\n",
 	       s->path, s->id);
 }
@@ -144,7 +143,7 @@ cmdprev(int fd, int argc, char **argv)
 	}
 
 	prev = getprevsong();
-	decoder->close();
+	matchdecoder(s->path)->close();
 	s->state = NONE;
 	prev->state = PREPARE;
 	putcursong(prev);
@@ -166,7 +165,7 @@ cmdstop(int fd, int argc, char **argv)
 		dprintf(fd, "ERR \"no song is active\"\n");
 		return;
 	}
-	decoder->close();
+	matchdecoder(s->path)->close();
 	s->state = NONE;
 	dprintf(fd, "OK\n");
 }
@@ -202,7 +201,7 @@ cmdclear(int fd, int argc, char **argv)
 
 	s = getcursong();
 	if (s) {
-		decoder->close();
+		matchdecoder(s->path)->close();
 		s->state = NONE;
 	}
 	clearplaylist();

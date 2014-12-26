@@ -17,7 +17,6 @@ fd_set   master;
 fd_set   rfds;
 int      fdmax;
 Output  *output = &sndiooutput;
-Decoder *decoder = &wavdecoder;
 
 static int
 servlisten(const char *name)
@@ -65,25 +64,28 @@ servaccept(int listenfd)
 static void
 doaudio(void)
 {
-	Song *s;
-	short buf[2048];
-	int   nbytes;
+	Song    *s;
+	Decoder *d;
+	short    buf[2048];
+	int      nbytes;
 
 	s = getcursong();
 	if (!s)
 		return;
 
+	d = matchdecoder(s->path);
+
 	switch (s->state) {
 	case PREPARE:
-		if (decoder->open(s->path) < 0) {
+		if (d->open(s->path) < 0) {
 			s->state = NONE;
 			return;
 		}
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if ((nbytes = decoder->decode(buf, sizeof(buf))) <= 0) {
-			decoder->close();
+		if ((nbytes = d->decode(buf, sizeof(buf))) <= 0) {
+			d->close();
 			s->state = NONE;
 		} else {
 			output->play(buf, nbytes);
@@ -105,7 +107,7 @@ main(void)
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
-	decoder->init();
+	initdecoders();
 
 	while (1) {
 		rfds = master;

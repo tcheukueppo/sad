@@ -45,7 +45,6 @@ extern fd_set   master;
 extern fd_set   rfds;
 extern int      fdmax;
 extern Output  *output;
-extern Decoder *decoder;
 
 /* cmd.c */
 int docmd(int);
@@ -65,9 +64,16 @@ void clearplaylist(void);
 /* wav.c */
 extern Decoder wavdecoder;
 
+/* mp3.c */
+extern Decoder mp3decoder;
+
 /* sndio.c */
 extern Output sndiooutput;
 
 /* tokenizer.c */
 int gettokens(char *, char **, int, char *);
 int tokenize(char *, char **, int);
+
+/* decoder.c */
+int initdecoders(void);
+Decoder *matchdecoder(const char *);
