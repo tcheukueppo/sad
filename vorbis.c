@@ -22,6 +22,7 @@ static int
 vorbisopen(const char *name)
 {
 	int r;
+	vorbis_info *vi;
 
 	fp = fopen(name, "r");
 	if (!fp) {
@@ -36,8 +37,20 @@ vorbisopen(const char *name)
 		return -1;
 	}
 
-	/* TODO: pull out params from file */
-	return output->open(16, 44100, 2);
+	vi = ov_info(&vf, -1);
+	if (!vi) {
+		warnx("ov_info: failed");
+		goto err0;
+	}
+
+	r = output->open(16, vi->rate, vi->channels);
+	if (r < 0)
+		goto err0;
+
+	return 0;
+err0:
+	ov_clear(&vf);
+	return -1;
 }
 
 static int
