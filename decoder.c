@@ -11,7 +11,7 @@
 static struct {
 	char    *ext;
 	Decoder *decoder;
-} Decodermap[] = {
+} decodermap[] = {
 	{ ".wav", &wavdecoder    },
 	{ ".mp3", &mp3decoder    },
 	{ ".ogg", &vorbisdecoder },
@@ -22,8 +22,8 @@ initdecoders(void)
 {
 	int i, r = 0;
 
-	for (i = 0; i < LEN(Decodermap); i++)
-		if (Decodermap[i].decoder->init() < 0)
+	for (i = 0; i < LEN(decodermap); i++)
+		if (decodermap[i].decoder->init() < 0)
 			r = -1;
 	return r;
 }
@@ -37,8 +37,8 @@ matchdecoder(const char *name)
 	ext = strrchr(name, '.');
 	if (!ext)
 		return NULL;
-	for (i = 0; i < LEN(Decodermap); i++)
-		if (!strcasecmp(Decodermap[i].ext, ext))
-			return Decodermap[i].decoder;
+	for (i = 0; i < LEN(decodermap); i++)
+		if (!strcasecmp(decodermap[i].ext, ext))
+			return decodermap[i].decoder;
 	return NULL;
 }
