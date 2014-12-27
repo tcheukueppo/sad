@@ -42,7 +42,7 @@ cmdvolume(int fd, char *arg)
 static void
 cmdnext(int fd, char *arg)
 {
-	Song *s, *next;
+	Song *s;
 
 	if (arg[0]) {
 		dprintf(fd, "ERR unexpected argument\n");
@@ -55,16 +55,7 @@ cmdnext(int fd, char *arg)
 		return;
 	}
 
-	if (s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
-
-	next = getnextsong();
-	next->state = PREPARE;
-	putcursong(next);
-	printf("Playing song %s with %d\n",
-	       s->path, s->id);
+	playnext();
 	dprintf(fd, "OK\n");
 }
 
@@ -146,7 +137,7 @@ cmdplay(int fd, char *arg)
 static void
 cmdprev(int fd, char *arg)
 {
-	Song *s, *prev;
+	Song *s;
 
 	if (arg[0]) {
 		dprintf(fd, "ERR unexpected argument\n");
@@ -164,11 +155,7 @@ cmdprev(int fd, char *arg)
 		s->state = NONE;
 	}
 
-	prev = getprevsong();
-	prev->state = PREPARE;
-	putcursong(prev);
-	printf("Playing song %s with %d\n",
-	       s->path, s->id);
+	playprev();
 	dprintf(fd, "OK\n");
 }
 

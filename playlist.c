@@ -179,3 +179,35 @@ clearplaylist(void)
 	rollingid = 0;
 	playlist.cursong = NULL;
 }
+
+Song *
+playnext(void)
+{
+	Song *s;
+
+	s = playlist.cursong;
+	if (s && s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
+	/* default to a repeat/cycle through mode */
+	s = getnextsong();
+	s->state = PREPARE;
+	playlist.cursong = s;
+}
+
+Song *
+playprev(void)
+{
+	Song *s;
+
+	s = playlist.cursong;
+	if (s && s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
+	/* default to a repeat/cycle through mode */
+	s = getprevsong();
+	s->state = PREPARE;
+	playlist.cursong = s;
+}
