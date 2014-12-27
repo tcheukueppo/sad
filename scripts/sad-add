@@ -1,0 +1,23 @@
+#!/bin/sh
+sock="/tmp/sad-sock"
+paths="$HOME/music
+../"
+
+while read -r p; do
+	# absolute paths.
+	d=$(readlink -f "$p")
+	test -d "$d" || continue
+	# find mpg, ogg, wav files in specified path
+	# make an add command and pipe it to the UDS.
+	find "$d" -type f \
+		\( -iname "*.mp3" -or \
+		-iname "*.ogg" -or \
+		-iname "*.wav" \) \
+		-exec printf 'add %s\n' {} \; | \
+		nc -U "$sock"
+done <<!__EOF__
+$paths
+!__EOF__
+
+
+

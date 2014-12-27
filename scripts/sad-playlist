@@ -1,0 +1,10 @@
+#!/bin/sh
+sock="/tmp/sad-sock"
+
+song=$(echo playlist | nc -U "$sock" | \
+	grep -v '^OK$' | grep -v '^ERR ' | \
+	dmenu -l 20 -i -p 'Search: ')
+if test x"$song" != x""; then
+	id=$(printf '%s' "$song" | cut -d ':' -f 1)
+	printf 'play %s\n' "$id" | nc -U "$sock"
+fi
