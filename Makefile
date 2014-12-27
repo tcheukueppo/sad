@@ -7,7 +7,18 @@ CFLAGS = -I/usr/local/include -g
 LDFLAGS = -L /usr/local/lib
 LDLIBS = -lsndfile -lmpg123 -lsndio -lvorbisfile
 
-OBJ = cmd.o decoder.o fifo.o mp3.o output.o playlist.o sad.o sndio.o vorbis.o wav.o
+OBJ =\
+	cmd.o\
+	decoder.o\
+	fifo.o\
+	mp3.o\
+	output.o\
+	playlist.o\
+	sad.o\
+	sndio.o\
+	vorbis.o\
+	wav.o
+
 BIN = sad
 
 # non-OpenBSD
