@@ -23,6 +23,7 @@ BIN = sad
 
 # non-OpenBSD
 OBJ += compat/reallocarray.o
+OBJ += compat/strlcat.o
 OBJ += compat/strlcpy.o
 CFLAGS += -DCOMPAT
 
