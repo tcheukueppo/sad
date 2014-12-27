@@ -104,7 +104,7 @@ main(void)
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
 
-	listenfd = servlisten("sock");
+	listenfd = servlisten("/tmp/sad-sock");
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
