@@ -44,10 +44,6 @@ mp3open(const char *name)
 		goto err0;
 	}
 
-	r = output->open(mpg123_encsize(encoding) * 8, rate, channels);
-	if (r < 0)
-		goto err0;
-
 	return 0;
 err0:
 	mpg123_close(hdl);
@@ -73,16 +69,11 @@ mp3decode(void *buf, int nbytes)
 static int
 mp3close(void)
 {
-	int r = 0;
-
-	r = mpg123_close(hdl);
-	if (r != MPG123_OK) {
+	if (mpg123_close(hdl) != MPG123_OK) {
 		warnx("mpg123_close: failed");
-		r = -1;
+		return -1;
 	}
-	if (output->close() < 0)
-		r = -1;
-	return r;
+	return 0;
 }
 
 static void

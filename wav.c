@@ -51,9 +51,6 @@ wavopen(const char *name)
 		goto err0;
 	}
 
-	if (output->open(bits, sfinfo.samplerate, sfinfo.channels) < 0)
-		goto err0;
-
 	return 0;
 err0:
 	sf_close(sf);
@@ -80,8 +77,6 @@ wavclose(void)
 		}
 	}
 	sf = NULL;
-	if (output->close() < 0)
-		r = -1;
 	return r;
 }
 

@@ -35,10 +35,6 @@ vorbisopen(const char *name)
 		goto err0;
 	}
 
-	r = output->open(16, vi->rate, vi->channels);
-	if (r < 0)
-		goto err0;
-
 	return 0;
 
 err0:
@@ -70,13 +66,7 @@ vorbisdecode(void *buf, int nbytes)
 static int
 vorbisclose(void)
 {
-	int r = 0;
-
-	if (ov_clear(&vf) < 0)
-		r = -1;
-	if (output->close() < 0)
-		r = -1;
-	return r;
+	return ov_clear(&vf);
 }
 
 static void

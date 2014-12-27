@@ -104,6 +104,7 @@ main(void)
 	fdmax = listenfd;
 
 	initdecoders();
+	output->open(16, 44100, 2);
 
 	while (1) {
 		rfds = master;
