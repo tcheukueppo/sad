@@ -16,14 +16,7 @@ static struct {
 	int     enabled;
 	Output *output;
 } outputs[] = {
-	{
-		.name = "sndio",
-		.bits = 16,
-		.rate = 44100,
-		.channels = 2,
-		.enabled = 1,
-		.output = &sndiooutput
-	},
+	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
 };
 
 int
