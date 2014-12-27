@@ -3,7 +3,7 @@ VERSION = 0.0
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/man
 
-CFLAGS = -I/usr/local/include -g
+CFLAGS = -I/usr/local/include -g -Wall
 LDFLAGS = -L /usr/local/lib
 LDLIBS = -lsndfile -lmpg123 -lsndio -lvorbisfile
 

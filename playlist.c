@@ -174,6 +174,7 @@ playnextsong(void)
 	s = getnextsong();
 	s->state = PREPARE;
 	playlist.cursong = s;
+	return s;
 }
 
 Song *
@@ -186,6 +187,7 @@ playprevsong(void)
 	s = getprevsong();
 	s->state = PREPARE;
 	playlist.cursong = s;
+	return s;
 }
 
 void

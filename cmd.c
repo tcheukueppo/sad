@@ -188,8 +188,6 @@ cmdadd(int fd, char *arg)
 static void
 cmdclear(int fd, char *arg)
 {
-	Song *s;
-
 	if (arg[0]) {
 		dprintf(fd, "ERR unexpected argument\n");
 		return;
@@ -293,8 +291,6 @@ docmd(int clifd)
 	size_t cmdlen;
 	char   *new_buf;
 	int     i, c;
-	int     argc;
-	char   *argv[2];
 
 	/* If no buffer, set it up.  */
 	if (!buf) {

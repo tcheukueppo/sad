@@ -30,7 +30,7 @@ mp3open(const char *name)
 {
 	int  r;
 	long rate;
-	int  channels, encoding, bits;
+	int  channels, encoding;
 
 	r = mpg123_open(hdl, name);
 	if (r != MPG123_OK) {
