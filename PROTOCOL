@@ -68,6 +68,13 @@ Number of seconds the daemon has been running.
 version
 The sad protocol version.
 
+enable output
+Enable the given output.  Every decoded buffer will be written to all
+enabled outputs.
+
+disable output
+Disable the given output.
+
 status [state]
 Query state information from the daemon.  The optional argument [state]
 identifies what information should be returned.  If not specified, all of the
