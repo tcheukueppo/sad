@@ -1,2 +1,4 @@
 #undef reallocarray
-void * reallocarray(void *, size_t, size_t);
+void *reallocarray(void *, size_t, size_t);
+#undef strlcpy
+size_t strlcpy(char *, const char *, size_t);

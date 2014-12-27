@@ -1,6 +1,5 @@
-/*	$OpenBSD: reallocarray.c,v 1.1 2014/05/08 21:43:49 deraadt Exp $	*/
 /*
- * Copyright (c) 2008 Otto Moerbeek <otto@drijf.net>
+ * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,26 +14,35 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <string.h>
 #include <sys/types.h>
-#include <errno.h>
-#include <stdint.h>
-#include <stdlib.h>
 
 #include "../compat.h"
 
 /*
- * This is sqrt(SIZE_MAX+1), as s1*s2 <= SIZE_MAX
- * if both s1 < MUL_NO_OVERFLOW and s2 < MUL_NO_OVERFLOW
+ * Copy src to string dst of size siz. At most siz-1 characters
+ * will be copied. Always NUL terminates (unless siz == 0).
+ * Returns strlen(src); if retval >= siz, truncation occurred.
  */
-#define MUL_NO_OVERFLOW	(1UL << (sizeof(size_t) * 4))
-
-void *
-reallocarray(void *optr, size_t nmemb, size_t size)
+size_t
+strlcpy(char *dst, const char *src, size_t siz)
 {
-	if ((nmemb >= MUL_NO_OVERFLOW || size >= MUL_NO_OVERFLOW) &&
-	    nmemb > 0 && SIZE_MAX / nmemb < size) {
-		errno = ENOMEM;
-		return NULL;
+	char *d = dst;
+	const char *s = src;
+	size_t n = siz;
+	/* Copy as many bytes as will fit */
+	if (n != 0) {
+		while (--n != 0) {
+			if ((*d++ = *s++) == '\0')
+				break;
+		}
 	}
-	return realloc(optr, size * nmemb);
+	/* Not enough room in dst, add NUL and traverse rest of src */
+	if (n == 0) {
+		if (siz != 0)
+			*d = '\0'; /* NUL-terminate dst */
+		while (*s++)
+			;
+	}
+	return(s - src - 1); /* count does not include NUL */
 }
