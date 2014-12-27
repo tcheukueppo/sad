@@ -17,6 +17,7 @@ typedef struct {
 	Output *output;
 } Outputdesc;
 
+/* TODO: should be moved to config.def.h */
 static Outputdesc Outputdescs[] = {
 	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
 };
