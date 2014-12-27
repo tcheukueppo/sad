@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
-#include <sndfile.h>
 
 #include "sad.h"
 
