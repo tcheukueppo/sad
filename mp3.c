@@ -44,6 +44,7 @@ mp3open(const char *name)
 		goto err0;
 	}
 
+	setinputfmt(mpg123_encsize(encoding) * 8, rate, channels);
 	return 0;
 err0:
 	mpg123_close(hdl);

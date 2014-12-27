@@ -19,6 +19,10 @@ static struct {
 	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
 };
 
+static int  inbits;
+static long inrate;
+static int  inchannels;
+
 int
 openoutput(const char *name)
 {
@@ -98,4 +102,12 @@ voloutput(int vol)
 			r = -1;
 	}
 	return r;
+}
+
+void
+setinputfmt(int bits, long rate, int channels)
+{
+	inbits = bits;
+	inrate = rate;
+	inchannels = channels;
 }

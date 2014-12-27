@@ -51,6 +51,8 @@ wavopen(const char *name)
 		goto err0;
 	}
 
+	setinputfmt(bits, sfinfo.samplerate, sfinfo.channels);
+
 	return 0;
 err0:
 	sf_close(sf);

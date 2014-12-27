@@ -35,6 +35,8 @@ vorbisopen(const char *name)
 		goto err0;
 	}
 
+	setinputfmt(16, vi->rate, vi->channels);
+
 	return 0;
 
 err0:
