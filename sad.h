@@ -68,6 +68,8 @@ void clearplaylist(void);
 int searchplaylist(int, const char *);
 Song *playnext(void);
 Song *playprev(void);
+void play(Song *);
+void stop(Song *);
 
 /* wav.c */
 extern Decoder wavdecoder;

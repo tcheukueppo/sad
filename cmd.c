@@ -55,7 +55,7 @@ cmdnext(int fd, char *arg)
 		return;
 	}
 
-	playnext();
+	play(getnextsong());
 	dprintf(fd, "OK\n");
 }
 
@@ -112,11 +112,6 @@ cmdplay(int fd, char *arg)
 		return;
 	}
 
-	if (cur->state != NONE) {
-		cur->decoder->close();
-		cur->state = NONE;
-	}
-
 	if (arg[0]) {
 		id = atoi(arg);
 		s = findsongid(id);
@@ -128,8 +123,7 @@ cmdplay(int fd, char *arg)
 		s = cur;
 	}
 
-	s->state = PREPARE;
-	putcursong(s);
+	play(s);
 	printf("Playing song %s with %d\n",
 	       s->path, s->id);
 }
@@ -150,12 +144,7 @@ cmdprev(int fd, char *arg)
 		return;
 	}
 
-	if (s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
-
-	playprev();
+	play(getprevsong());
 	dprintf(fd, "OK\n");
 }
 
@@ -175,11 +164,7 @@ cmdstop(int fd, char *arg)
 		return;
 	}
 
-	if (s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
-
+	stop(s);
 	dprintf(fd, "OK\n");
 }
 
@@ -216,11 +201,7 @@ cmdclear(int fd, char *arg)
 		return;
 	}
 
-	s = getcursong();
-	if (s && s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
+	stop(getcursong());
 	clearplaylist();
 	dprintf(fd, "OK\n");
 }

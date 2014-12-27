@@ -185,11 +185,7 @@ playnext(void)
 {
 	Song *s;
 
-	s = playlist.cursong;
-	if (s && s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
+	stop(playlist.cursong);
 	/* default to a repeat/cycle through mode */
 	s = getnextsong();
 	s->state = PREPARE;
@@ -201,13 +197,26 @@ playprev(void)
 {
 	Song *s;
 
-	s = playlist.cursong;
-	if (s && s->state != NONE) {
-		s->decoder->close();
-		s->state = NONE;
-	}
+	stop(playlist.cursong);
 	/* default to a repeat/cycle through mode */
 	s = getprevsong();
 	s->state = PREPARE;
 	playlist.cursong = s;
+}
+
+void
+play(Song *new)
+{
+	stop(playlist.cursong);
+	new->state = PREPARE;
+	playlist.cursong = new;
+}
+
+void
+stop(Song *s)
+{
+	if (s && s->state != NONE) {
+		s->decoder->close();
+		s->state = NONE;
+	}
 }
