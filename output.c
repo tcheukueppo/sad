@@ -32,7 +32,7 @@ openoutput(const char *name)
 	int i;
 
 	for (i = 0; i < LEN(outputs); i++) {
-		if (outputs[i].enabled)
+		if (!outputs[i].enabled)
 			continue;
 		if (strcmp(outputs[i].name, name))
 			continue;
@@ -48,14 +48,9 @@ openoutputs(void)
 {
 	int i, r = 0;
 
-	for (i = 0; i < LEN(outputs); i++) {
-		if (!outputs[i].enabled)
-			continue;
-		if (outputs[i].output->open(outputs[i].bits,
-		                            outputs[i].rate,
-		                            outputs[i].channels) < 0)
+	for (i = 0; i < LEN(outputs); i++)
+		if (openoutput(outputs[i].name) < 0)
 			r = -1;
-	}
 	return r;
 }
 
