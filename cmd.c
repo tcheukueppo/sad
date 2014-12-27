@@ -95,8 +95,6 @@ cmdpause(int fd, char *arg)
 		dprintf(fd, "ERR no song is active\n");
 		return;
 	}
-	printf("Song %s with id %d is %s\n",
-	       s->path, s->id, s->state == PAUSED ? "paused" : "playing");
 	dprintf(fd, "OK\n");
 }
 
@@ -124,8 +122,6 @@ cmdplay(int fd, char *arg)
 	}
 
 	play(s);
-	printf("Playing song %s with %d\n",
-	       s->path, s->id);
 }
 
 static void
@@ -186,8 +182,6 @@ cmdadd(int fd, char *arg)
 		dprintf(fd, "ERR cannot add file: %s\n", arg);
 		return;
 	}
-	printf("Added song with path %s and id %d\n",
-	       s->path, s->id);
 	dprintf(fd, "OK\n");
 }
 
