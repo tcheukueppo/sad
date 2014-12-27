@@ -33,7 +33,7 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
-$(OBJ): compat.h config.h sad.h
+$(OBJ): arg.h compat.h config.h sad.h
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
