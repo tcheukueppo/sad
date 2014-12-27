@@ -11,11 +11,13 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "arg.h"
 #include "sad.h"
 
 fd_set   master;
 fd_set   rfds;
 int      fdmax;
+char    *argv0;
 
 static int
 servlisten(const char *name)
@@ -89,16 +91,32 @@ playaudio(void)
 	}
 }
 
+static void
+usage(void)
+{
+	fprintf(stderr, "usage: %s [-f sock]\n", argv0);
+	exit(1);
+}
+
 int
-main(void)
+main(int argc, char *argv[])
 {
 	struct timeval tv;
 	int    listenfd, clifd, n, i;
+	char  *socketpath = "/tmp/sad-sock";
+
+	ARGBEGIN {
+	case 'f':
+		socketpath = EARGF(usage());
+		break;
+	default:
+		usage();
+	} ARGEND;
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
 
-	listenfd = servlisten("/tmp/sad-sock");
+	listenfd = servlisten(socketpath);
 	FD_SET(listenfd, &master);
 	fdmax = listenfd;
 
