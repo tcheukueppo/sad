@@ -3,7 +3,6 @@
 #include <err.h>
 #include <limits.h>
 #include <stdio.h>
-#include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
 
 #include "sad.h"
