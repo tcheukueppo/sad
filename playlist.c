@@ -46,20 +46,6 @@ addplaylist(const char *path)
 }
 
 Song *
-findsong(const char *path)
-{
-	Song *s;
-	int   i;
-
-	for (i = 0; i < playlist.nsongs; i++) {
-		s = playlist.songs[i];
-		if (!strcmp(s->path, path))
-			return s;
-	}
-	return NULL;
-}
-
-Song *
 findsongid(int id)
 {
 	Song *s;

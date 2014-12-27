@@ -57,7 +57,6 @@ int docmd(int);
 
 /* playlist.c */
 Song *addplaylist(const char *);
-Song *findsong(const char *);
 Song *findsongid(int);
 Song *getnextsong(void);
 Song *getprevsong(void);
