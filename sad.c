@@ -16,7 +16,6 @@
 fd_set   master;
 fd_set   rfds;
 int      fdmax;
-Output  *output = &sndiooutput;
 
 static int
 servlisten(const char *name)
@@ -84,7 +83,7 @@ playaudio(void)
 		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
 			playnextsong();
 		} else {
-			output->play(buf, nbytes);
+			playoutput(buf, nbytes);
 		}
 		break;
 	}
@@ -104,7 +103,7 @@ main(void)
 	fdmax = listenfd;
 
 	initdecoders();
-	output->open(16, 44100, 2);
+	openoutputs();
 
 	while (1) {
 		rfds = master;

@@ -50,7 +50,6 @@ typedef struct {
 extern fd_set   master;
 extern fd_set   rfds;
 extern int      fdmax;
-extern Output  *output;
 
 /* cmd.c */
 int docmd(int);
@@ -89,3 +88,9 @@ int tokenize(char *, char **, int);
 /* decoder.c */
 int initdecoders(void);
 Decoder *matchdecoder(const char *);
+
+/* output.c */
+int openoutput(const char *);
+int openoutputs(void);
+int playoutput(void *, size_t);
+int voloutput(int);

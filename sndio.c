@@ -64,9 +64,9 @@ err0:
 }
 
 static int
-sndioplay(void *buf, size_t size)
+sndioplay(void *buf, size_t nbytes)
 {
-	return sio_write(hdl, buf, size);
+	return sio_write(hdl, buf, nbytes);
 }
 
 static int
