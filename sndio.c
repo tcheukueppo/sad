@@ -54,7 +54,6 @@ sndioopen(int bits, int rate, int channels)
 		goto err0;
 	}
 
-	puts("Opened sndio output");
 	return 0;
 
 err0:
@@ -75,7 +74,6 @@ sndioclose(void)
 	if (hdl)
 		sio_close(hdl);
 	hdl = NULL;
-	puts("Closed sndio output");
 	return 0;
 }
 

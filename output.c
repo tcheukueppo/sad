@@ -8,14 +8,16 @@
 
 #include "sad.h"
 
-static struct {
+typedef struct {
 	char   *name;
 	int     bits;
 	long    rate;
 	int     channels;
 	int     enabled;
 	Output *output;
-} outputs[] = {
+} Outputdesc;
+
+static Outputdesc Outputdescs[] = {
 	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
 };
 
@@ -26,43 +28,20 @@ static int  inchannels;
 int
 openoutput(const char *name)
 {
+	Outputdesc *desc;
 	int i;
 
-	for (i = 0; i < LEN(outputs); i++) {
-		if (!outputs[i].enabled)
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
 			continue;
-		if (strcmp(outputs[i].name, name))
+		if (strcmp(desc->name, name))
 			continue;
-		return outputs[i].output->open(outputs[i].bits,
-		                               outputs[i].rate,
-		                               outputs[i].channels);
+		return desc->output->open(desc->bits,
+		                          desc->rate,
+		                          desc->channels);
 	}
 	return -1;
-}
-
-int
-closeoutput(const char *name)
-{
-	int i;
-
-	for (i = 0; i < LEN(outputs); i++) {
-		if (!outputs[i].enabled)
-			continue;
-		if (strcmp(outputs[i].name, name))
-			continue;
-		return outputs[i].output->close();
-	}
-}
-
-int
-closeoutputs(void)
-{
-	int i, r = 0;
-
-	for (i = 0; i < LEN(outputs); i++)
-		if (closeoutput(outputs[i].name) < 0)
-			r = -1;
-	return r;
 }
 
 int
@@ -70,21 +49,58 @@ openoutputs(void)
 {
 	int i, r = 0;
 
-	for (i = 0; i < LEN(outputs); i++)
-		if (openoutput(outputs[i].name) < 0)
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		if (openoutput(Outputdescs[i].name) < 0)
 			r = -1;
+		else
+			printf("Opened %s output\n",
+			       Outputdescs[i].name);
+	}
+	return r;
+}
+
+int
+closeoutput(const char *name)
+{
+	Outputdesc *desc;
+	int i;
+
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
+			continue;
+		if (strcmp(desc->name, name))
+			continue;
+		return desc->output->close();
+	}
+	return -1;
+}
+
+int
+closeoutputs(void)
+{
+	int i, r = 0;
+
+	for (i = 0; i < LEN(Outputdescs); i++)
+		if (closeoutput(Outputdescs[i].name) < 0)
+			r = -1;
+		else
+			printf("Closed %s output\n",
+			       Outputdescs[i].name);
 	return r;
 }
 
 int
 playoutput(void *buf, size_t nbytes)
 {
+	Outputdesc *desc;
 	int i, r = 0;
 
-	for (i = 0; i < LEN(outputs); i++) {
-		if (!outputs[i].enabled)
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
 			continue;
-		if (outputs[i].output->play(buf, nbytes) < 0)
+		if (desc->output->play(buf, nbytes) < 0)
 			r = -1;
 	}
 	return r;
@@ -93,12 +109,14 @@ playoutput(void *buf, size_t nbytes)
 int
 voloutput(int vol)
 {
+	Outputdesc *desc;
 	int i, r = 0;
 
-	for (i = 0; i < LEN(outputs); i++) {
-		if (!outputs[i].enabled)
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
 			continue;
-		if (outputs[i].output->vol(vol) < 0)
+		if (desc->output->vol(vol) < 0)
 			r = -1;
 	}
 	return r;
