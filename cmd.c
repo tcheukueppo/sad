@@ -55,7 +55,7 @@ cmdnext(int fd, char *arg)
 		return;
 	}
 
-	play(getnextsong());
+	playsong(getnextsong());
 	dprintf(fd, "OK\n");
 }
 
@@ -121,7 +121,7 @@ cmdplay(int fd, char *arg)
 		s = cur;
 	}
 
-	play(s);
+	playsong(s);
 }
 
 static void
@@ -140,7 +140,7 @@ cmdprev(int fd, char *arg)
 		return;
 	}
 
-	play(getprevsong());
+	playsong(getprevsong());
 	dprintf(fd, "OK\n");
 }
 
@@ -160,7 +160,7 @@ cmdstop(int fd, char *arg)
 		return;
 	}
 
-	stop(s);
+	stopsong(s);
 	dprintf(fd, "OK\n");
 }
 
@@ -195,7 +195,7 @@ cmdclear(int fd, char *arg)
 		return;
 	}
 
-	stop(getcursong());
+	stopsong(getcursong());
 	clearplaylist();
 	dprintf(fd, "OK\n");
 }

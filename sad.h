@@ -65,10 +65,10 @@ void putcursong(Song *);
 void dumpplaylist(int);
 void clearplaylist(void);
 int searchplaylist(int, const char *);
-Song *playnext(void);
-Song *playprev(void);
-void play(Song *);
-void stop(Song *);
+Song *playnextsong(void);
+Song *playprevsong(void);
+void playsong(Song *);
+void stopsong(Song *);
 
 /* wav.c */
 extern Decoder wavdecoder;

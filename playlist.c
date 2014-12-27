@@ -167,11 +167,11 @@ clearplaylist(void)
 }
 
 Song *
-playnext(void)
+playnextsong(void)
 {
 	Song *s;
 
-	stop(playlist.cursong);
+	stopsong(playlist.cursong);
 	/* default to a repeat/cycle through mode */
 	s = getnextsong();
 	s->state = PREPARE;
@@ -179,11 +179,11 @@ playnext(void)
 }
 
 Song *
-playprev(void)
+playprevsong(void)
 {
 	Song *s;
 
-	stop(playlist.cursong);
+	stopsong(playlist.cursong);
 	/* default to a repeat/cycle through mode */
 	s = getprevsong();
 	s->state = PREPARE;
@@ -191,15 +191,15 @@ playprev(void)
 }
 
 void
-play(Song *new)
+playsong(Song *new)
 {
-	stop(playlist.cursong);
+	stopsong(playlist.cursong);
 	new->state = PREPARE;
 	playlist.cursong = new;
 }
 
 void
-stop(Song *s)
+stopsong(Song *s)
 {
 	if (s && s->state != NONE) {
 		s->decoder->close();
