@@ -7,7 +7,7 @@ CFLAGS = -I/usr/local/include -g
 LDFLAGS = -L /usr/local/lib
 LDLIBS = -lsndfile -lmpg123 -lsndio -lvorbisfile
 
-OBJ = sndio.o cmd.o mp3.o wav.o vorbis.o playlist.o sad.o decoder.o output.o fifo.o
+OBJ = cmd.o decoder.o fifo.o mp3.o output.o playlist.o sad.o sndio.o vorbis.o wav.o
 BIN = sad
 
 # non-OpenBSD
@@ -19,16 +19,7 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
-sndio.o: config.h sad.h
-cmd.o: config.h sad.h
-mp3.o: config.h sad.h
-wav.o: config.h sad.h
-vorbis.o: config.h sad.h
-playlist.o: config.h sad.h
-sad.o: config.h sad.h
-decoder.o: config.h sad.h
-output.o: config.h sad.h
-fifo.o: config.h sad.h
+$(OBJ): config.h sad.h
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
