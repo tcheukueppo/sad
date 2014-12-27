@@ -25,6 +25,7 @@ BIN = sad
 OBJ += compat/reallocarray.o
 OBJ += compat/strlcat.o
 OBJ += compat/strlcpy.o
+OBJ += compat/strtonum.o
 CFLAGS += -DCOMPAT
 
 all: $(BIN)
