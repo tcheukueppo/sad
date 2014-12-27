@@ -32,7 +32,7 @@ cmdvolume(int fd, char *arg)
 		dprintf(fd, "ERR volume should be between [0, 100]\n");
 		return;
 	}
-	if (voloutput(vol) < 0) {
+	if (setvol(vol) < 0) {
 		dprintf(fd, "ERR failed to change volume\n");
 		return;
 	}

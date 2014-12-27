@@ -95,5 +95,5 @@ int openoutputs(void);
 int closeoutput(const char *);
 int closeoutputs(void);
 int playoutput(void *, size_t);
-int voloutput(int);
+int setvol(int);
 void setinputfmt(int, long, int);

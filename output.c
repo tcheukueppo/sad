@@ -107,7 +107,7 @@ playoutput(void *buf, size_t nbytes)
 }
 
 int
-voloutput(int vol)
+setvol(int vol)
 {
 	Outputdesc *desc;
 	int i, r = 0;
