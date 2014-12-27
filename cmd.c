@@ -63,6 +63,8 @@ cmdnext(int fd, char *arg)
 	next = getnextsong();
 	next->state = PREPARE;
 	putcursong(next);
+	printf("Playing song %s with %d\n",
+	       s->path, s->id);
 	dprintf(fd, "OK\n");
 }
 
@@ -137,7 +139,7 @@ cmdplay(int fd, char *arg)
 
 	s->state = PREPARE;
 	putcursong(s);
-	printf("Song %s with %d playing\n",
+	printf("Playing song %s with %d\n",
 	       s->path, s->id);
 }
 
@@ -165,6 +167,8 @@ cmdprev(int fd, char *arg)
 	prev = getprevsong();
 	prev->state = PREPARE;
 	putcursong(prev);
+	printf("Playing song %s with %d\n",
+	       s->path, s->id);
 	dprintf(fd, "OK\n");
 }
 
