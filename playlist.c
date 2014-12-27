@@ -18,7 +18,6 @@ addplaylist(const char *path)
 {
 	Decoder *d;
 	Song    *s;
-	Song   **p;
 
 	d = matchdecoder(path);
 	if (!d)
@@ -26,9 +25,8 @@ addplaylist(const char *path)
 
 	if (!playlist.nsongs || playlist.nsongs + 1 > playlist.maxsongs) {
 		playlist.maxsongs += 4096;
-		if (!(p = reallocarray(playlist.songs, playlist.maxsongs, sizeof(Song *))))
+		if (!(playlist.songs = reallocarray(playlist.songs, playlist.maxsongs, sizeof(Song *))))
 			err(1, "reallocarray");
-		playlist.songs = p;
 	}
 	if (!(s = calloc(1, sizeof(Song))))
 		err(1, "calloc");
