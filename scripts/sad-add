@@ -1,7 +1,6 @@
 #!/bin/sh
 sock="/tmp/sad-sock"
-paths="$HOME/music
-../"
+paths="$HOME/music"
 
 while read -r p; do
 	# absolute paths.
@@ -18,6 +17,3 @@ while read -r p; do
 done <<!__EOF__
 $paths
 !__EOF__
-
-
-
