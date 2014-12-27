@@ -290,6 +290,16 @@ cmdsearch(int fd, char *arg)
 		dprintf(fd, "OK\n");
 }
 
+static void
+cmdversion(int fd, char *arg)
+{
+	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+	dprintf(fd, "version 0.0\nOK\n");
+}
+
 static Cmd cmds[] = {
 	{ "status",   cmdstatus   },
 	{ "volume",   cmdvolume   },
@@ -305,7 +315,8 @@ static Cmd cmds[] = {
 	{ "close",    cmdclose    },
 	{ "kill",     cmdkill     },
 	{ "ping",     cmdping     },
-	{ "search",   cmdsearch   }
+	{ "search",   cmdsearch   },
+	{ "version",  cmdversion  }
 };
 
 /* shamelessly taken from isakmpd ui.c */

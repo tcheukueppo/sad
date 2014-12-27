@@ -128,7 +128,6 @@ main(void)
 				FD_SET(clifd, &master);
 				if (clifd > fdmax)
 					fdmax = clifd;
-				dprintf(clifd, "version %s\n", PROTOCOLVERSION);
 			} else {
 				if (docmd(i) < 0) {
 					close(i);
