@@ -20,6 +20,7 @@ typedef struct {
 /* TODO: should be moved to config.def.h */
 static Outputdesc Outputdescs[] = {
 	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
+	{ "fifo",  16, 44100, 2, 1, &fifooutput  },
 };
 
 static int  inbits;

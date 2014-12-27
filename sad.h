@@ -81,6 +81,9 @@ extern Decoder vorbisdecoder;
 /* sndio.c */
 extern Output sndiooutput;
 
+/* fifo.c */
+extern Output fifooutput;
+
 /* tokenizer.c */
 int gettokens(char *, char **, int, char *);
 int tokenize(char *, char **, int);
