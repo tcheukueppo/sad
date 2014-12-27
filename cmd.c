@@ -243,7 +243,7 @@ static void
 cmdsearch(int fd, char *arg)
 {
 	if (!arg[0]) {
-		dprintf(fd, "ERR expects search string\n");
+		dprintf(fd, "ERR expectede search string\n");
 		return;
 	}
 	if (searchplaylist(fd, arg) != -1)
