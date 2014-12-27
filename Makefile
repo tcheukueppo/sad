@@ -19,16 +19,16 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
-sndio.o: sad.h
-cmd.o: sad.h
-mp3.o: sad.h
-wav.o: sad.h
-vorbis.o: sad.h
-playlist.o: sad.h
-sad.o: sad.h
-decoder.o: sad.h
-output.o: sad.h
-fifo.o: sad.h
+sndio.o: config.h sad.h
+cmd.o: config.h sad.h
+mp3.o: config.h sad.h
+wav.o: config.h sad.h
+vorbis.o: config.h sad.h
+playlist.o: config.h sad.h
+sad.o: config.h sad.h
+decoder.o: config.h sad.h
+output.o: config.h sad.h
+fifo.o: config.h sad.h
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -39,3 +39,11 @@ uninstall:
 
 clean:
 	rm -f $(BIN) $(OBJ)
+
+.SUFFIXES: .def.h
+
+.def.h.h:
+	cp $< $@
+
+.PHONY:
+	all install uninstall clean

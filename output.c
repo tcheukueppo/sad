@@ -17,11 +17,7 @@ typedef struct {
 	Output *output;
 } Outputdesc;
 
-/* TODO: should be moved to config.def.h */
-static Outputdesc Outputdescs[] = {
-	{ "sndio", 16, 44100, 2, 1, &sndiooutput },
-	{ "fifo",  16, 44100, 2, 1, &fifooutput  },
-};
+#include "config.h"
 
 static int  inbits;
 static long inrate;
