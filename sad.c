@@ -64,7 +64,7 @@ static void
 playaudio(void)
 {
 	Song    *s;
-	unsigned char buf[4096];
+	unsigned char buf[2048];
 	int      nbytes;
 
 	s = getcursong();
