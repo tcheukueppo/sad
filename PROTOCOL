@@ -1,58 +1,85 @@
-requests
---------
-cmd arg
+Command reference
+=================
 
-At the moment only single argument commands are supported.
-
-responses
----------
-output + OK on success, ERR descriptive error message on error.
-
-commands
---------
-
-status
-	-> songid: playlist songid of the current song stopped on or playing
-	-> state: play, stop or pause
-	-> volume: 0-100
-	-> elapsed: total time elapsed within current song
-	-> duration: total song duration in seconds
-	-> random: 1 if random mode is set 0 otherwise
-	-> repeat: 1 if repeat mode is set 0 otherwise
-	-> single: 1 if single mode is set 0 otherwise
+NOTE: All commands will return some optional output followed by OK on success or
+ERR followed by an error message on failure.
 
 random 0|1
+Select random playback mode.  By default the daemon is in a repeat mode where it cycles
+through the playlist endlessly.
 
 repeat 0|1
+Set repeat mode.  Just cycle through the playlist.
 
 single 0|1
+Set single mode.  Play one song, then stop.
 
 volume 0-100
+Set the output volume.  This is applied equally to all outputs.
 
 next
+Play next song.
 
 pause 0|1
+Pause currently playing song.
 
-play songid
+play [ID]
+Play the song with the given ID or the current song if no ID is provided.
+When the playlist gets populated initially, the first song added is the current song.
+A song ID is just a unique integer identifying the song.  ID rolls back at 0 when
+the playlist is cleared.
 
 prev
+Play previous song.
 
 stop
+Stop playback.
 
-add path
+add file
+Add a file to the playlist.  Directories are not handled.
 
 clear
+Clear playlist and stop playback.  The next file added will have a song ID
+equal to 0.
 
-delete songid
+delete [ID]
+Delete the song with the given ID or the currently selected song.
 
 playlist
+Dump the current playlist.  The output has the following form:
+"%d: %s\n", id, filepath
+
+search regex
+Search for a song matching the given regex.  At the moment it will only
+consider file names.
 
 close
+Force the daemon to close the client connection.
 
 kill
+Kill the daemon.
 
 ping
+The daemon will reply with pong.
 
 uptime
+Number of seconds the daemon has been running.
 
 version
+The sad protocol version.
+
+status [state]
+Query state information from the daemon.  The optional argument [state]
+identifies what information should be returned.  If not specified, all of the
+state information is returned.  The format of the reply is:
+"%s: %s", statevar, infomsg
+
+Possible states:
+	random: 1 if random mode is set 0 otherwise
+	repeat: 1 if repeat mode is set 0 otherwise
+	single: 1 if single mode is set 0 otherwise
+	songid: playlist songid of the current song stopped on or playing
+	playback: either play, stop or pause
+	volume: 0-100
+	elapsed: total time elapsed within current song in seconds
+	duration: total song duration in seconds
