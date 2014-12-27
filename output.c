@@ -44,6 +44,31 @@ openoutput(const char *name)
 }
 
 int
+closeoutput(const char *name)
+{
+	int i;
+
+	for (i = 0; i < LEN(outputs); i++) {
+		if (!outputs[i].enabled)
+			continue;
+		if (strcmp(outputs[i].name, name))
+			continue;
+		return outputs[i].output->close();
+	}
+}
+
+int
+closeoutputs(void)
+{
+	int i, r = 0;
+
+	for (i = 0; i < LEN(outputs); i++)
+		if (closeoutput(outputs[i].name) < 0)
+			r = -1;
+	return r;
+}
+
+int
 openoutputs(void)
 {
 	int i, r = 0;

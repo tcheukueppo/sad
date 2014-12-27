@@ -92,5 +92,7 @@ Decoder *matchdecoder(const char *);
 /* output.c */
 int openoutput(const char *);
 int openoutputs(void);
+int closeoutput(const char *);
+int closeoutputs(void);
 int playoutput(void *, size_t);
 int voloutput(int);
