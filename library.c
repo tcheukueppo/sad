@@ -21,7 +21,7 @@ addlibrary(const char *path)
 
 	s = findsong(path);
 	if (s)
-		return NULL;
+		return s;
 
 	d = matchdecoder(path);
 	if (!d)
