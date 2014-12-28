@@ -21,14 +21,15 @@ static void
 cmdvolume(int fd, char *arg)
 {
 	int vol;
+	const char *errstr;
 
 	if (!arg[0]) {
 		dprintf(fd, "ERR expected volume\n");
 		return;
 	}
 
-	vol = atoi(arg);
-	if (vol < 0 || vol > 100) {
+	vol = strtonum(arg, 0, 100, &errstr);
+	if (errstr) {
 		dprintf(fd, "ERR volume should be between [0, 100]\n");
 		return;
 	}
@@ -64,14 +65,15 @@ cmdpause(int fd, char *arg)
 {
 	Song *s;
 	int   pause;
+	const char *errstr;
 
 	if (!arg[0]) {
 		dprintf(fd, "ERR argument should be 0 or 1\n");
 		return;
 	}
 
-	pause = atoi(arg);
-	if (pause != 0 && pause != 1) {
+	pause = strtonum(arg, 0, 1, &errstr);
+	if (errstr) {
 		dprintf(fd, "ERR argument should be 0 or 1\n");
 		return;
 	}
@@ -103,6 +105,7 @@ cmdplay(int fd, char *arg)
 {
 	Song *s, *cur;
 	int   id;
+	const char *errstr;
 
 	cur = getcursong();
 	if (!cur) {
@@ -111,10 +114,15 @@ cmdplay(int fd, char *arg)
 	}
 
 	if (arg[0]) {
-		id = atoi(arg);
+		id = strtonum(arg, 0, INT_MAX, &errstr);
+		if (errstr) {
+			dprintf(fd, "ERR invalid song id\n");
+			return;
+		}
+
 		s = findsongid(id);
 		if (!s) {
-			dprintf(fd, "ERR invalid song id\n");
+			dprintf(fd, "ERR cannot find song with given id\n");
 			return;
 		}
 	} else {
@@ -168,12 +176,21 @@ cmdstop(int fd, char *arg)
 static void
 cmdadd(int fd, char *arg)
 {
+	const char *errstr;
+	int id;
+
 	if (!arg[0]) {
 		dprintf(fd, "ERR expected ID\n");
 		return;
 	}
 
-	if (!addplaylist(atoi(arg))) {
+	id = strtonum(arg, 0, INT_MAX, &errstr);
+	if (errstr) {
+		dprintf(fd, "ERR invalid song id\n");
+		return;
+	}
+
+	if (!addplaylist(id)) {
 		dprintf(fd, "ERR cannot add song to playlist\n");
 		return;
 	}
