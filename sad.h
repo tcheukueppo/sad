@@ -46,6 +46,12 @@ typedef struct {
 	size_t maxsongs;
 } Playlist;
 
+typedef struct {
+	Song **songs;
+	size_t nsongs;
+	size_t maxsongs;
+} Library;
+
 /* sad.c */
 extern fd_set   master;
 extern fd_set   rfds;
@@ -55,19 +61,24 @@ extern int      fdmax;
 int docmd(int);
 
 /* playlist.c */
-Song *addplaylist(const char *);
-Song *findsongid(int);
+Song *addplaylist(int);
 Song *getnextsong(void);
 Song *getprevsong(void);
 Song *getcursong(void);
 void putcursong(Song *);
 void dumpplaylist(int);
 void clearplaylist(void);
-int searchplaylist(int, const char *);
 Song *playnextsong(void);
 Song *playprevsong(void);
 void playsong(Song *);
 void stopsong(Song *);
+
+/* library.c */
+Song *addlibrary(const char *);
+Song *findsongid(int);
+void dumplibrary(int);
+int searchlibrary(int, const char *);
+void clearlibrary(void);
 
 /* wav.c */
 extern Decoder wavdecoder;

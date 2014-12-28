@@ -35,9 +35,14 @@ openoutput(const char *name)
 			continue;
 		if (strcmp(desc->name, name))
 			continue;
-		return desc->output->open(desc->bits,
-		                          desc->rate,
-		                          desc->channels);
+		if (desc->output->open(desc->bits,
+		                       desc->rate,
+		                       desc->channels) < 0) {
+			printf("Disabling %s output\n",
+			       desc->name);
+			desc->enabled = 0;
+			return -1;
+		}
 	}
 	return -1;
 }

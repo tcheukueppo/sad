@@ -122,6 +122,7 @@ cmdplay(int fd, char *arg)
 	}
 
 	playsong(s);
+	dprintf(fd, "OK\n");
 }
 
 static void
@@ -167,21 +168,16 @@ cmdstop(int fd, char *arg)
 static void
 cmdadd(int fd, char *arg)
 {
-	Song *s;
-
 	if (!arg[0]) {
-		dprintf(fd, "ERR expected file path\n");
+		dprintf(fd, "ERR expected ID\n");
 		return;
 	}
-	if (access(arg, F_OK) < 0) {
-		dprintf(fd, "ERR file doesn't exist: %s\n", arg);
+
+	if (!addplaylist(atoi(arg))) {
+		dprintf(fd, "ERR cannot add song to playlist\n");
 		return;
 	}
-	s = addplaylist(arg);
-	if (!s) {
-		dprintf(fd, "ERR cannot add file: %s\n", arg);
-		return;
-	}
+
 	dprintf(fd, "OK\n");
 }
 
@@ -215,6 +211,31 @@ cmdplaylist(int fd, char *arg)
 }
 
 static void
+cmdlibrary(int fd, char *arg)
+{
+	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+	dumplibrary(fd);
+	dprintf(fd, "OK\n");
+}
+
+static void
+cmdlearn(int fd, char *arg)
+{
+	if (!arg[0]) {
+		dprintf(fd, "ERR expected argument file path\n");
+		return;
+	}
+	if (!addlibrary(arg)) {
+		dprintf(fd, "ERR failed to add song to library\n");
+		return;
+	}
+	dprintf(fd, "OK\n");
+}
+
+static void
 cmdclose(int fd, char *arg)
 {
 }
@@ -226,6 +247,7 @@ cmdkill(int fd, char *arg)
 		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
+	dprintf(fd, "OK\n");
 	raise(SIGTERM);
 }
 
@@ -246,7 +268,7 @@ cmdsearch(int fd, char *arg)
 		dprintf(fd, "ERR expectede search string\n");
 		return;
 	}
-	if (searchplaylist(fd, arg) != -1)
+	if (searchlibrary(fd, arg) != -1)
 		dprintf(fd, "OK\n");
 }
 
@@ -272,6 +294,8 @@ static Cmd cmds[] = {
 	{ "clear",    cmdclear    },
 	{ "delete",   cmddelete   },
 	{ "playlist", cmdplaylist },
+	{ "library",  cmdlibrary  },
+	{ "learn",    cmdlearn    },
 	{ "close",    cmdclose    },
 	{ "kill",     cmdkill     },
 	{ "ping",     cmdping     },

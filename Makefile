@@ -11,6 +11,7 @@ OBJ =\
 	cmd.o\
 	decoder.o\
 	fifo.o\
+	library.o\
 	mp3.o\
 	output.o\
 	playlist.o\

@@ -82,11 +82,10 @@ playaudio(void)
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
+		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0)
 			playnextsong();
-		} else {
+		else
 			playoutput(buf, nbytes);
-		}
 		break;
 	}
 }

@@ -25,9 +25,6 @@ Pause currently playing song.
 
 play [ID]
 Play the song with the given ID or the current song if no ID is provided.
-When the playlist gets populated initially, the first song added is the current song.
-A song ID is just a unique integer identifying the song.  ID rolls back at 0 when
-the playlist is cleared.
 
 prev
 Play previous song.
@@ -35,23 +32,35 @@ Play previous song.
 stop
 Stop playback.
 
-add file
-Add a file to the playlist.  Directories are not handled.
+add [ID]
+Add the given song ID from the library to the playlist.  If not ID
+is provided, all songs in the library are added.
 
 clear
 Clear playlist and stop playback.  The next file added will have a song ID
 equal to 0.
 
-delete [ID]
-Delete the song with the given ID or the currently selected song.
+remove [ID]
+Delete the song with the given ID or the currently selected song from
+the playlist.
 
 playlist
 Dump the current playlist.  The output has the following form:
 "%d: %s\n", id, filepath
 
+playlist
+Dump the library.  The output has the following form:
+"%d: %s\n", id, filepath
+
 search regex
-Search for a song matching the given regex.  At the moment it will only
-consider file names.
+Search for a song matching the given regex in the library.  At the moment it
+will only consider file names.
+
+learn path
+Add the path to library.
+
+forget ID
+Forget the song with the given ID from the library.
 
 close
 Force the daemon to close the client connection.
