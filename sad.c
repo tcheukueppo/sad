@@ -82,10 +82,12 @@ playaudio(void)
 		s->state = PLAYING;
 		break;
 	case PLAYING:
-		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0)
+		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
 			playnextsong();
-		else
+			notify(EVSONGFINISHED);
+		} else {
 			playoutput(buf, nbytes);
+		}
 		break;
 	}
 }
@@ -121,6 +123,7 @@ main(int argc, char *argv[])
 
 	initdecoders();
 	openoutputs();
+	initnotifier();
 
 	while (1) {
 		rfds = master;
@@ -144,6 +147,7 @@ main(int argc, char *argv[])
 				if (docmd(i) < 0) {
 					close(i);
 					FD_CLR(i, &master);
+					removesubscriber(i);
 				}
 			}
 		}

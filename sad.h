@@ -17,6 +17,10 @@ enum {
 	PAUSED
 };
 
+enum {
+	EVSONGFINISHED,
+};
+
 typedef struct {
 	int (*init)(void);
 	int (*open)(const char *);
@@ -51,6 +55,11 @@ typedef struct {
 	size_t nsongs;
 	size_t maxsongs;
 } Library;
+
+typedef struct eventdesc {
+	int   event;
+	char *name;
+} Eventdesc;
 
 /* sad.c */
 extern fd_set   master;
@@ -116,3 +125,12 @@ int enableoutput(const char *);
 int disableoutput(const char *);
 int playoutput(void *, size_t);
 int setvol(int);
+
+/* notify.c */
+extern Eventdesc Eventmap[];
+
+int initnotifier(void);
+int addsubscriber(int, int);
+int addsubscribername(int, const char *);
+int notify(int);
+void removesubscriber(int);

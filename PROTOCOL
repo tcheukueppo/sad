@@ -101,3 +101,11 @@ Possible states:
 	volume: 0-100
 	elapsed: total time elapsed within current song in seconds
 	duration: total song duration in seconds
+
+wait event-name
+Subscribe to the provided event.  When the event triggers, a reply will
+be sent back to the client.  The reply has the form:
+"event: %s\n", eventname
+
+Events are not queued.  It is not an error to wait on the same event
+more than once, however, be prepared to receive a single event reply.

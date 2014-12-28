@@ -14,6 +14,7 @@ OBJ =\
 	fifo.o\
 	library.o\
 	mp3.o\
+	notify.o\
 	output.o\
 	playlist.o\
 	sad.o\
@@ -35,7 +36,7 @@ all: $(BIN)
 $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
-$(OBJ): arg.h compat.h config.h sad.h
+$(OBJ): arg.h compat.h config.h queue.h sad.h
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

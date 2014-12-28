@@ -342,6 +342,21 @@ cmddisable(int fd, char *arg)
 	dprintf(fd, "OK\n");
 }
 
+static void
+cmdwait(int fd, char *arg)
+{
+	if (!arg[0]) {
+		dprintf(fd, "ERR expected event name\n");
+		return;
+	}
+
+	if (addsubscribername(fd, arg) < 0) {
+		dprintf(fd, "ERR unknown event type\n");
+		return;
+	}
+	dprintf(fd, "OK\n");
+}
+
 static Cmd cmds[] = {
 	{ "status",     cmdstatus     },
 	{ "volume",     cmdvolume     },
@@ -364,6 +379,7 @@ static Cmd cmds[] = {
 	{ "version",    cmdversion    },
 	{ "enable",     cmdenable     },
 	{ "disable",    cmddisable    },
+	{ "wait",       cmdwait       },
 };
 
 /* shamelessly taken from isakmpd ui.c */
