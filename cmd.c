@@ -180,7 +180,7 @@ cmdadd(int fd, char *arg)
 	int id;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR expected ID\n");
+		dprintf(fd, "ERR expected song id\n");
 		return;
 	}
 
