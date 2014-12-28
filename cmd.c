@@ -268,7 +268,14 @@ cmdlearn(int fd, char *arg)
 
 static void
 cmdclose(int fd, char *arg)
-{
+{	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+
+	dprintf(fd, "OK\n");
+	FD_CLR(fd, &master);
+	close(fd);
 }
 
 static void
