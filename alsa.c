@@ -13,6 +13,7 @@
 static snd_pcm_t *hdl;
 static snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
 static const int frame_size = 4; /* TODO: don't hardcode */
+static const char *device = "default"; /* TODO: make configurable? */
 
 static int
 alsavol(int vol)
@@ -23,7 +24,6 @@ alsavol(int vol)
 static int
 alsaopen(int bits, int rate, int channels)
 {
-	const char *device = "default"; /* TODO: make configurable? */
 	int r;
 
 	if ((r = snd_pcm_open(&hdl, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
