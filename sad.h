@@ -78,7 +78,7 @@ Song *addlibrary(const char *);
 Song *findsongid(int);
 void dumplibrary(int);
 int searchlibrary(int, const char *);
-void clearlibrary(void);
+void emptylibrary(void);
 
 /* wav.c */
 extern Decoder wavdecoder;

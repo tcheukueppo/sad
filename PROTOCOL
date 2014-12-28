@@ -37,8 +37,10 @@ Add the given song ID from the library to the playlist.  If not ID
 is provided, all songs in the library are added.
 
 clear
-Clear playlist and stop playback.  The next file added will have a song ID
-equal to 0.
+Clear playlist and stop playback.
+
+empty
+Empty the library, clear playlist and stop playback.
 
 remove [ID]
 Delete the song with the given ID or the currently selected song from

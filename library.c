@@ -103,8 +103,14 @@ searchlibrary(int fd, const char *search)
 }
 
 void
-clearlibrary(void)
+emptylibrary(void)
 {
+	int i;
+
+	for (i = 0; i < library.nsongs; i++) {
+		free(library.songs[i]);
+		library.songs[i] = NULL;
+	}
 	library.nsongs = 0;
 	rollingid = 0;
 }

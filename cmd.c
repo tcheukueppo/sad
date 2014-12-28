@@ -195,6 +195,20 @@ cmdclear(int fd, char *arg)
 }
 
 static void
+cmdempty(int fd, char *arg)
+{
+	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+
+	stopsong(getcursong());
+	clearplaylist();
+	emptylibrary();
+	dprintf(fd, "OK\n");
+}
+
+static void
 cmddelete(int fd, char *arg)
 {
 }
@@ -292,6 +306,7 @@ static Cmd cmds[] = {
 	{ "stop",     cmdstop     },
 	{ "add",      cmdadd      },
 	{ "clear",    cmdclear    },
+	{ "empty",    cmdempty    },
 	{ "delete",   cmddelete   },
 	{ "playlist", cmdplaylist },
 	{ "library",  cmdlibrary  },
