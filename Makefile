@@ -5,9 +5,10 @@ MANPREFIX = $(PREFIX)/man
 
 CFLAGS = -I/usr/local/include
 LDFLAGS = -L /usr/local/lib
-LDLIBS = -lsndfile -lmpg123 -lsndio -lvorbisfile
+LDLIBS = -lsndfile -lmpg123 -lsndio -lasound -lvorbisfile
 
 OBJ =\
+	alsa.o\
 	cmd.o\
 	decoder.o\
 	fifo.o\

@@ -93,6 +93,9 @@ extern Decoder vorbisdecoder;
 /* sndio.c */
 extern Output sndiooutput;
 
+/* alsa.c */
+extern Output alsaoutput;
+
 /* fifo.c */
 extern Output fifooutput;
 
