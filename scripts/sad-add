@@ -12,8 +12,14 @@ while read -r p; do
 		\( -iname "*.mp3" -or \
 		-iname "*.ogg" -or \
 		-iname "*.wav" \) \
-		-exec printf 'add %s\n' {} \; | \
+		-exec echo learn {} \; | \
 		nc -U "$sock"
 done <<!__EOF__
 $paths
 !__EOF__
+
+# add library to playlist.
+echo "library" | nc -U "$sock" | while read -r song; do
+	id=$(printf '%s' "$song" | cut -d ':' -f 1)
+	echo "add" "$id"
+done | nc -U "$sock"
