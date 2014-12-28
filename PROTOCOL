@@ -33,7 +33,7 @@ stop
 Stop playback.
 
 add [ID]
-Add the given song ID from the library to the playlist.  If not ID
+Add the given song ID from the library to the playlist.  If no ID
 is provided, all songs in the library are added.
 
 clear
@@ -43,14 +43,14 @@ empty
 Empty the library, clear playlist and stop playback.
 
 remove [ID]
-Delete the song with the given ID or the currently selected song from
-the playlist.
+Delete the song with the given ID or if ID is not given, the currently
+selected song from the playlist.
 
 playlist
 Dump the current playlist.  The output has the following form:
 "%d: %s\n", id, filepath
 
-playlist
+library
 Dump the library.  The output has the following form:
 "%d: %s\n", id, filepath
 
@@ -87,16 +87,16 @@ disable output
 Disable the given output.
 
 status [state]
-Query state information from the daemon.  The optional argument [state]
+Query state information from the daemon.  The optional argument state
 identifies what information should be returned.  If not specified, all of the
 state information is returned.  The format of the reply is:
-"%s: %s", statevar, infomsg
+"%s: %s\n", statevar, infomsg
 
 Possible states:
 	random: 1 if random mode is set 0 otherwise
 	repeat: 1 if repeat mode is set 0 otherwise
 	single: 1 if single mode is set 0 otherwise
-	songid: playlist songid of the current song stopped on or playing
+	songid: songid of the current song stopped on or playing
 	playback: either play, stop or pause
 	volume: 0-100
 	elapsed: total time elapsed within current song in seconds
