@@ -19,6 +19,10 @@ addlibrary(const char *path)
 	Decoder *d;
 	Song    *s;
 
+	s = findsong(path);
+	if (s)
+		return NULL;
+
 	d = matchdecoder(path);
 	if (!d)
 		return NULL;
@@ -41,6 +45,20 @@ addlibrary(const char *path)
 	s->decoder = d;
 	library.nsongs++;
 	return s;
+}
+
+Song *
+findsong(const char *path)
+{
+	Song *s;
+	int   i;
+
+	for (i = 0; i < library.nsongs; i++) {
+		s = library.songs[i];
+		if (!strcmp(s->path, path))
+			return s;
+	}
+	return NULL;
 }
 
 Song *

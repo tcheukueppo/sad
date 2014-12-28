@@ -75,6 +75,7 @@ void stopsong(Song *);
 
 /* library.c */
 Song *addlibrary(const char *);
+Song *findsong(const char *);
 Song *findsongid(int);
 void dumplibrary(int);
 int searchlibrary(int, const char *);
