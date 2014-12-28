@@ -14,14 +14,11 @@ typedef struct {
 	long    rate;
 	int     channels;
 	int     enabled;
+	int     active;
 	Output *output;
 } Outputdesc;
 
 #include "config.h"
-
-static int  inbits;
-static long inrate;
-static int  inchannels;
 
 int
 openoutput(const char *name)
@@ -31,17 +28,19 @@ openoutput(const char *name)
 
 	for (i = 0; i < LEN(Outputdescs); i++) {
 		desc = &Outputdescs[i];
-		if (!desc->enabled)
-			continue;
 		if (strcmp(desc->name, name))
 			continue;
+		if (desc->active)
+			return 0;
 		if (desc->output->open(desc->bits,
 		                       desc->rate,
 		                       desc->channels) < 0) {
-			printf("Disabling %s output\n",
-			       desc->name);
-			desc->enabled = 0;
+			desc->active = 0;
 			return -1;
+		} else {
+			printf("Opened %s output\n", desc->name);
+			desc->active = 1;
+			return 0;
 		}
 	}
 	return -1;
@@ -50,14 +49,15 @@ openoutput(const char *name)
 int
 openoutputs(void)
 {
+	Outputdesc *desc;
 	int i, r = 0;
 
 	for (i = 0; i < LEN(Outputdescs); i++) {
-		if (openoutput(Outputdescs[i].name) < 0)
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
+			continue;
+		if (openoutput(desc->name) < 0)
 			r = -1;
-		else
-			printf("Opened %s output\n",
-			       Outputdescs[i].name);
 	}
 	return r;
 }
@@ -70,11 +70,18 @@ closeoutput(const char *name)
 
 	for (i = 0; i < LEN(Outputdescs); i++) {
 		desc = &Outputdescs[i];
-		if (!desc->enabled)
-			continue;
 		if (strcmp(desc->name, name))
 			continue;
-		return desc->output->close();
+		if (!desc->active)
+			return 0;
+		if (desc->output->close() < 0) {
+			desc->active = 1;
+			return -1;
+		} else {
+			printf("Closed %s output\n", desc->name);
+			desc->active = 0;
+			return 0;
+		}
 	}
 	return -1;
 }
@@ -82,14 +89,16 @@ closeoutput(const char *name)
 int
 closeoutputs(void)
 {
+	Outputdesc *desc;
 	int i, r = 0;
 
-	for (i = 0; i < LEN(Outputdescs); i++)
-		if (closeoutput(Outputdescs[i].name) < 0)
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (!desc->enabled)
+			continue;
+		if (closeoutput(desc->name) < 0)
 			r = -1;
-		else
-			printf("Closed %s output\n",
-			       Outputdescs[i].name);
+	}
 	return r;
 }
 
@@ -101,7 +110,7 @@ playoutput(void *buf, size_t nbytes)
 
 	for (i = 0; i < LEN(Outputdescs); i++) {
 		desc = &Outputdescs[i];
-		if (!desc->enabled)
+		if (!desc->active)
 			continue;
 		if (desc->output->play(buf, nbytes) < 0)
 			r = -1;
@@ -117,7 +126,7 @@ setvol(int vol)
 
 	for (i = 0; i < LEN(Outputdescs); i++) {
 		desc = &Outputdescs[i];
-		if (!desc->enabled)
+		if (!desc->active)
 			continue;
 		if (desc->output->vol(vol) < 0)
 			r = -1;
@@ -125,10 +134,48 @@ setvol(int vol)
 	return r;
 }
 
-void
-setinputfmt(int bits, long rate, int channels)
+int
+enableoutput(const char *name)
 {
-	inbits = bits;
-	inrate = rate;
-	inchannels = channels;
+	Outputdesc *desc;
+	int i, r;
+
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (strcmp(desc->name, name))
+			continue;
+		if (desc->active)
+			return -1;
+		if (openoutput(desc->name) < 0) {
+			desc->enabled = 0;
+			return -1;
+		} else {
+			desc->enabled = 1;
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int
+disableoutput(const char *name)
+{
+	Outputdesc *desc;
+	int i;
+
+	for (i = 0; i < LEN(Outputdescs); i++) {
+		desc = &Outputdescs[i];
+		if (strcmp(desc->name, name))
+			continue;
+		if (!desc->active)
+			return -1;
+		if (closeoutput(desc->name) < 0) {
+			desc->enabled = 1;
+			return -1;
+		} else {
+			desc->enabled = 0;
+			return 0;
+		}
+	}
+	return -1;
 }

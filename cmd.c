@@ -296,26 +296,57 @@ cmdversion(int fd, char *arg)
 	dprintf(fd, "version 0.0\nOK\n");
 }
 
+static void
+cmdenable(int fd, char *arg)
+{
+	if (!arg[0]) {
+		dprintf(fd, "ERR expected output name\n");
+		return;
+	}
+	if (enableoutput(arg) < 0) {
+		dprintf(fd, "ERR failed to enable output %s\n", arg);
+		return;
+	}
+	dprintf(fd, "OK\n");
+}
+
+
+static void
+cmddisable(int fd, char *arg)
+{
+	if (!arg[0]) {
+		dprintf(fd, "ERR expected output name\n");
+		return;
+	}
+	if (disableoutput(arg) < 0) {
+		dprintf(fd, "ERR failed to disable output %s\n", arg);
+		return;
+	}
+	dprintf(fd, "OK\n");
+}
+
 static Cmd cmds[] = {
-	{ "status",   cmdstatus   },
-	{ "volume",   cmdvolume   },
-	{ "next",     cmdnext     },
-	{ "pause",    cmdpause    },
-	{ "play",     cmdplay     },
-	{ "prev",     cmdprev     },
-	{ "stop",     cmdstop     },
-	{ "add",      cmdadd      },
-	{ "clear",    cmdclear    },
-	{ "empty",    cmdempty    },
-	{ "delete",   cmddelete   },
-	{ "playlist", cmdplaylist },
-	{ "library",  cmdlibrary  },
-	{ "learn",    cmdlearn    },
-	{ "close",    cmdclose    },
-	{ "kill",     cmdkill     },
-	{ "ping",     cmdping     },
-	{ "search",   cmdsearch   },
-	{ "version",  cmdversion  }
+	{ "status",     cmdstatus     },
+	{ "volume",     cmdvolume     },
+	{ "next",       cmdnext       },
+	{ "pause",      cmdpause      },
+	{ "play",       cmdplay       },
+	{ "prev",       cmdprev       },
+	{ "stop",       cmdstop       },
+	{ "add",        cmdadd        },
+	{ "clear",      cmdclear      },
+	{ "empty",      cmdempty      },
+	{ "delete",     cmddelete     },
+	{ "playlist",   cmdplaylist   },
+	{ "library",    cmdlibrary    },
+	{ "learn",      cmdlearn      },
+	{ "close",      cmdclose      },
+	{ "kill",       cmdkill       },
+	{ "ping",       cmdping       },
+	{ "search",     cmdsearch     },
+	{ "version",    cmdversion    },
+	{ "enable",     cmdenable     },
+	{ "disable",    cmddisable    },
 };
 
 /* shamelessly taken from isakmpd ui.c */
