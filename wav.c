@@ -37,7 +37,6 @@ wavopen(const char *name)
 	case SF_FORMAT_PCM_S8:
 		bits = 8;
 		break;
-	case SF_FORMAT_FLAC:
 	case SF_FORMAT_PCM_16:
 		bits = 16;
 		break;
