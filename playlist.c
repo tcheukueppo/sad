@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "sad.h"
 
@@ -110,28 +111,22 @@ clearplaylist(void)
 }
 
 Song *
-playnextsong(void)
+picknextsong(void)
 {
 	Song *s;
 
-	stopsong(playlist.cursong);
-	/* default to a repeat/cycle through mode */
-	s = getnextsong();
-	s->state = PREPARE;
-	playlist.cursong = s;
-	return s;
-}
-
-Song *
-playprevsong(void)
-{
-	Song *s;
-
-	stopsong(playlist.cursong);
-	/* default to a repeat/cycle through mode */
-	s = getprevsong();
-	s->state = PREPARE;
-	playlist.cursong = s;
+	switch (playlist.mode) {
+	case REPEAT:
+		s = getnextsong();
+		break;
+	case RANDOM:
+		srand(time(NULL));
+		s = playlist.songs[rand() % playlist.nsongs];
+		break;
+	default:
+		s = NULL;
+		break;
+	}
 	return s;
 }
 
@@ -150,4 +145,10 @@ stopsong(Song *s)
 		s->decoder->close();
 		s->state = NONE;
 	}
+}
+
+void
+playlistmode(int mode)
+{
+	playlist.mode = mode;
 }

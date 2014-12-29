@@ -18,6 +18,11 @@ enum {
 };
 
 enum {
+	REPEAT,
+	RANDOM
+};
+
+enum {
 	EVSONGFINISHED,
 };
 
@@ -48,6 +53,7 @@ typedef struct {
 	Song  *cursong;
 	size_t nsongs;
 	size_t maxsongs;
+	int    mode;
 } Playlist;
 
 typedef struct {
@@ -77,10 +83,10 @@ Song *getcursong(void);
 void putcursong(Song *);
 void dumpplaylist(int);
 void clearplaylist(void);
-Song *playnextsong(void);
-Song *playprevsong(void);
+Song *picknextsong(void);
 void playsong(Song *);
 void stopsong(Song *);
+void playlistmode(int);
 
 /* library.c */
 Song *addlibrary(const char *);

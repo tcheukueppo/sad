@@ -83,7 +83,7 @@ playaudio(void)
 		break;
 	case PLAYING:
 		if ((nbytes = s->decoder->decode(buf, sizeof(buf))) <= 0) {
-			playnextsong();
+			playsong(picknextsong());
 			notify(EVSONGFINISHED);
 		} else {
 			playoutput(buf, nbytes);
@@ -124,6 +124,8 @@ main(int argc, char *argv[])
 	initdecoders();
 	openoutputs();
 	initnotifier();
+
+	playlistmode(REPEAT);
 
 	while (1) {
 		rfds = master;
