@@ -4,15 +4,12 @@ Command reference
 NOTE: All commands will return some optional output followed by OK on success or
 ERR followed by an error message on failure.
 
-random 0|1
+random
 Select random playback mode.  By default the daemon is in a repeat mode where it cycles
 through the playlist endlessly.
 
-repeat 0|1
+repeat
 Set repeat mode.  Just cycle through the playlist.
-
-single 0|1
-Set single mode.  Play one song, then stop.
 
 volume 0-100
 Set the output volume.  This is applied equally to all outputs.

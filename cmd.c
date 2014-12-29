@@ -18,6 +18,30 @@ cmdstatus(int fd, char *arg)
 }
 
 static void
+cmdrepeat(int fd, char *arg)
+{
+	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+
+	playlistmode(REPEAT);
+	dprintf(fd, "OK\n");
+}
+
+static void
+cmdrandom(int fd, char *arg)
+{
+	if (arg[0]) {
+		dprintf(fd, "ERR unexpected argument\n");
+		return;
+	}
+
+	playlistmode(RANDOM);
+	dprintf(fd, "OK\n");
+}
+
+static void
 cmdvolume(int fd, char *arg)
 {
 	int vol;
@@ -365,6 +389,8 @@ cmdwait(int fd, char *arg)
 }
 
 static Cmd cmds[] = {
+	{ "repeat",     cmdrepeat     },
+	{ "random",     cmdrandom     },
 	{ "status",     cmdstatus     },
 	{ "volume",     cmdvolume     },
 	{ "next",       cmdnext       },
