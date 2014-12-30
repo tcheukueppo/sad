@@ -33,9 +33,9 @@ initresampler(Outputdesc *desc, int inrate)
 
 	quality = soxr_quality_spec(RESAMPLEQUALITY, 0);
 	iospec = soxr_io_spec(SOXR_INT16_I, SOXR_INT16_I);
+
 	if (desc->resampler)
 		soxr_delete(desc->resampler);
-
 	desc->resampler = soxr_create(inrate, desc->rate,
 	                              desc->channels,
 	                              NULL,
