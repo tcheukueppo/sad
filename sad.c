@@ -86,7 +86,7 @@ playaudio(void)
 			playsong(picknextsong());
 			notify(EVSONGFINISHED);
 		} else {
-			playoutput(buf, nbytes);
+			playoutputs(buf, nbytes);
 		}
 		break;
 	}

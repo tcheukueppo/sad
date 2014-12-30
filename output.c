@@ -137,46 +137,62 @@ closeoutputs(void)
 	return r;
 }
 
-int
-playoutput(void *inbuf, size_t nbytes)
+static int
+playoutput(Outputdesc *desc, void *inbuf, size_t nbytes)
 {
-	Outputdesc *desc;
 	soxr_error_t e;
 	size_t inframes, outframes;
 	size_t framesize;
 	size_t idone, odone;
 	void  *outbuf;
 	float  ratio;
-	int    i, r = 0;
+	int    i;
+
+	if (!desc->active)
+		return 0;
+
+	if (desc->inrate == desc->rate) {
+		if (desc->output->play(inbuf, nbytes) < 0)
+			return -1;
+		return 0;
+	}
+
+	/* perform SRC */
+	framesize = (desc->bits + 7) / 8 * desc->channels;
+	inframes = nbytes / framesize;
+	ratio = (float)desc->rate / desc->inrate;
+	outframes = inframes * ratio + 1;
+	outbuf = malloc(outframes * framesize);
+	if (!outbuf)
+		err(1, "malloc");
+
+	e = soxr_process(desc->resampler, inbuf, inframes,
+	                 &idone, outbuf, outframes,
+	                 &odone);
+	if (!e) {
+		if (desc->output->play(outbuf, odone * framesize) < 0)
+			return -1;
+		free(outbuf);
+		return 0;
+	}
+
+	warnx("soxr_process: failed");
+	free(outbuf);
+	return -1;
+}
+
+int
+playoutputs(void *inbuf, size_t nbytes)
+{
+	Outputdesc *desc;
+	int i, r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
 		if (!desc->active)
 			continue;
-		if (desc->inrate == desc->rate) {
-			if (desc->output->play(inbuf, nbytes) <0)
-				r = -1;
-		} else {
-			framesize = (desc->bits + 7) / 8 * desc->channels;
-			inframes = nbytes / framesize;
-			ratio = (float)desc->rate / desc->inrate;
-			outframes = inframes * ratio + 1;
-			outbuf = malloc(outframes * framesize);
-			if (!outbuf)
-				err(1, "malloc");
-
-			e = soxr_process(desc->resampler, inbuf, inframes,
-			                 &idone, outbuf, outframes,
-			                 &odone);
-			if (e) {
-				warnx("soxr_process: failed");
-				free(outbuf);
-				continue;
-			}
-			if (desc->output->play(outbuf, odone * framesize) < 0)
-				r = -1;
-			free(outbuf);
-		}
+		if (playoutput(desc, inbuf, nbytes) < 0)
+			r = -1;
 	}
 	return r;
 }

@@ -128,7 +128,7 @@ int openoutputs(void);
 int closeoutputs(void);
 int enableoutput(const char *);
 int disableoutput(const char *);
-int playoutput(void *, size_t);
+int playoutputs(void *, size_t);
 int setvol(int);
 
 /* notify.c */
