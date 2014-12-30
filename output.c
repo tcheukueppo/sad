@@ -31,8 +31,7 @@ initresampler(Outputdesc *desc, int inrate)
 	soxr_io_spec_t      iospec;
 	int i;
 
-	/* TODO: resampling quality should be configurable in config.h */
-	quality = soxr_quality_spec(SOXR_VHQ, 0);
+	quality = soxr_quality_spec(RESAMPLEQUALITY, 0);
 	iospec = soxr_io_spec(SOXR_INT16_I, SOXR_INT16_I);
 	if (desc->resampler)
 		soxr_delete(desc->resampler);
