@@ -44,7 +44,8 @@ mp3open(const char *name)
 		goto err0;
 	}
 
-	initresamplers(rate);
+	if (initresamplers(rate) < 0)
+		goto err0;
 
 	return 0;
 err0:

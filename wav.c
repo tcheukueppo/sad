@@ -51,7 +51,8 @@ wavopen(const char *name)
 		goto err0;
 	}
 
-	initresamplers(sfinfo.samplerate);
+	if (initresamplers(sfinfo.samplerate) < 0)
+		goto err0;
 
 	return 0;
 err0:
