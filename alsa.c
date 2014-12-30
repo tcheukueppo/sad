@@ -1,18 +1,16 @@
 /* reference: http://www.alsa-project.org/alsa-doc/alsa-lib/_2test_2pcm_min_8c-example.html */
-
 #include <sys/select.h>
 
 #include <err.h>
 #include <limits.h>
 #include <stdio.h>
-
 #include <alsa/asoundlib.h>
 
 #include "sad.h"
 
 static snd_pcm_t *hdl;
 static snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
-static const int frame_size = 4; /* TODO: don't hardcode */
+static int framesize;
 static const char *device = "default"; /* TODO: make configurable? */
 
 static int
@@ -35,6 +33,7 @@ alsaopen(int bits, int rate, int channels)
 		warnx("send_pcm_set_params: %s\n", snd_strerror(r));
 		return -1;
 	}
+	framesize = (bits + 7) / 8 * channels;
 	return 0;
 }
 
@@ -43,7 +42,7 @@ alsaplay(void *buf, size_t nbytes)
 {
 	snd_pcm_sframes_t frames;
 
-	frames = snd_pcm_writei(hdl, buf, nbytes / frame_size);
+	frames = snd_pcm_writei(hdl, buf, nbytes / framesize);
 	if (frames < 0)
 		frames = snd_pcm_recover(hdl, frames, 0);
 	if (frames < 0) {
