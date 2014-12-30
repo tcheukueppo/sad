@@ -11,6 +11,7 @@ while read -r p; do
 	find "$d" -type f \
 		\( -iname "*.mp3" -or \
 		-iname "*.ogg" -or \
+		-iname "*.flac" -or \
 		-iname "*.wav" \) \
 		-exec echo learn {} \; | \
 		nc -U "$sock"
