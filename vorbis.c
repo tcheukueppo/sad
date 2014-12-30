@@ -34,6 +34,8 @@ vorbisopen(const char *name)
 		goto err0;
 	}
 
+	initresamplers(vi->rate);
+
 	return 0;
 
 err0:

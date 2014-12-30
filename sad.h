@@ -123,9 +123,8 @@ int initdecoders(void);
 Decoder *matchdecoder(const char *);
 
 /* output.c */
-int openoutput(const char *);
+int initresamplers(int);
 int openoutputs(void);
-int closeoutput(const char *);
 int closeoutputs(void);
 int enableoutput(const char *);
 int disableoutput(const char *);

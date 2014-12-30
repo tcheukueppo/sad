@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "sad.h"
 
@@ -18,6 +19,9 @@ addlibrary(const char *path)
 {
 	Decoder *d;
 	Song    *s;
+
+	if (access(path, F_OK) < 0)
+		return NULL;
 
 	s = findsong(path);
 	if (s)

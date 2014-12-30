@@ -44,6 +44,8 @@ mp3open(const char *name)
 		goto err0;
 	}
 
+	initresamplers(rate);
+
 	return 0;
 err0:
 	mpg123_close(hdl);

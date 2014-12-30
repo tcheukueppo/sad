@@ -5,7 +5,7 @@ MANPREFIX = $(PREFIX)/man
 
 CFLAGS = -I/usr/local/include
 LDFLAGS = -L /usr/local/lib
-LDLIBS = -lsndfile -lmpg123 -lsndio -lasound -lvorbisfile
+LDLIBS = -lsndfile -lmpg123 -lsndio -lasound -lvorbisfile -lsoxr
 
 OBJ =\
 	alsa.o\
