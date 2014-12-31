@@ -65,6 +65,11 @@ alsaopen(Format *fmt)
 	snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
 	int r;
 
+	if (fmt->bits != 16) {
+		warnx("unsupported number of bits");
+		return -1;
+	}
+
 	if ((r = snd_pcm_open(&hdl, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
 		warnx("snd_pcm_open: %s\n", snd_strerror(r));
 		return -1;
