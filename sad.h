@@ -62,7 +62,7 @@ typedef struct {
 	size_t maxsongs;
 } Library;
 
-typedef struct eventdesc {
+typedef struct {
 	int   event;
 	char *name;
 } Eventdesc;
