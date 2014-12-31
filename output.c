@@ -162,6 +162,15 @@ s16monotostereo(short *in, short *out, size_t nsamples)
 	}
 }
 
+static void
+s16stereotomono(short *in, short *out, size_t nsamples)
+{
+	size_t i;
+
+	for (i = 0; i < nsamples; ++i)
+		out[i] = (in[i * 2] + in[i * 2 + 1]) / 2;
+}
+
 static int
 playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 {
@@ -177,13 +186,20 @@ playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 	if (!desc->active)
 		return 0;
 
-	/* perform mono to stereo conversion */
 	if (fmt->channels == 1 && desc->fmt.channels == 2) {
+		/* perform mono to stereo conversion */
 		inbuf = malloc(nbytes * 2);
 		if (!inbuf)
 			err(1, "malloc");
 		s16monotostereo(buf, inbuf, nbytes / 2);
 		nbytes *= 2;
+	} else if (fmt->channels == 2 && desc->fmt.channels == 1) {
+		/* perform stereo to mono conversion */
+		inbuf = malloc(nbytes / 2);
+		if (!inbuf)
+			err(1, "malloc");
+		s16stereotomono(buf, inbuf, nbytes / 4);
+		nbytes /= 2;
 	} else {
 		inbuf = malloc(nbytes);
 		if (!inbuf)
