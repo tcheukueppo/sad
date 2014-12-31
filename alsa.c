@@ -8,7 +8,6 @@
 #include "sad.h"
 
 static snd_pcm_t *hdl;
-static snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
 static int framesize;
 static const char *device = "default"; /* TODO: make configurable? */
 
@@ -63,12 +62,14 @@ err0:
 static int
 alsaopen(int bits, int rate, int channels)
 {
+	snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
 	int r;
 
 	if ((r = snd_pcm_open(&hdl, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
 		warnx("snd_pcm_open: %s\n", snd_strerror(r));
 		return -1;
 	}
+
 	if ((r = snd_pcm_set_params(hdl, format, SND_PCM_ACCESS_RW_INTERLEAVED,
 	     channels, rate, 1, 500000)) < 0) {
 		warnx("send_pcm_set_params: %s\n", snd_strerror(r));
