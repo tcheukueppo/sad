@@ -18,7 +18,7 @@ Outputcfg outputcfgs[] = {
 			.rate = 44100,
 			.channels = 2
 		},
-		.enabled = 0,
+		.enabled = 1,
 		.output = &alsaoutput
 	},
 	{
