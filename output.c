@@ -19,13 +19,12 @@ typedef struct {
 	int     active;
 	Output *output;
 	soxr_t  resampler;
-	int     inrate;
 } Outputdesc;
 
 #include "config.h"
 
 static int
-initresampler(Outputdesc *desc, int inrate)
+initresampler(Format *fmt, Outputdesc *desc)
 {
 	soxr_quality_spec_t quality;
 	soxr_io_spec_t      iospec;
@@ -36,7 +35,7 @@ initresampler(Outputdesc *desc, int inrate)
 
 	if (desc->resampler)
 		soxr_delete(desc->resampler);
-	desc->resampler = soxr_create(inrate, desc->rate,
+	desc->resampler = soxr_create(fmt->rate, desc->rate,
 	                              desc->channels,
 	                              NULL,
 	                              &iospec,
@@ -47,12 +46,11 @@ initresampler(Outputdesc *desc, int inrate)
 		return -1;
 	}
 
-	desc->inrate = inrate;
 	return 0;
 }
 
 int
-initresamplers(int inrate)
+initresamplers(Format *fmt)
 {
 	Outputdesc *desc;
 	int i, r = 0;
@@ -61,7 +59,7 @@ initresamplers(int inrate)
 		desc = &outputdescs[i];
 		if (!desc->enabled)
 			continue;
-		if (initresampler(desc, inrate) < 0)
+		if (initresampler(fmt, desc) < 0)
 			r = -1;
 	}
 	return r;
@@ -133,7 +131,7 @@ closeoutputs(void)
 }
 
 static int
-playoutput(Outputdesc *desc, void *inbuf, size_t nbytes)
+playoutput(Format *fmt, Outputdesc *desc, void *inbuf, size_t nbytes)
 {
 	soxr_error_t e;
 	size_t inframes, outframes;
@@ -146,7 +144,7 @@ playoutput(Outputdesc *desc, void *inbuf, size_t nbytes)
 	if (!desc->active)
 		return 0;
 
-	if (desc->inrate == desc->rate) {
+	if (desc->rate == fmt->rate) {
 		if (desc->output->play(inbuf, nbytes) < 0)
 			return -1;
 		return 0;
@@ -155,7 +153,7 @@ playoutput(Outputdesc *desc, void *inbuf, size_t nbytes)
 	/* perform SRC */
 	framesize = (desc->bits + 7) / 8 * desc->channels;
 	inframes = nbytes / framesize;
-	ratio = (float)desc->rate / desc->inrate;
+	ratio = (float)desc->rate / fmt->rate;
 	outframes = inframes * ratio + 1;
 	outbuf = malloc(outframes * framesize);
 	if (!outbuf)
@@ -177,7 +175,7 @@ playoutput(Outputdesc *desc, void *inbuf, size_t nbytes)
 }
 
 int
-playoutputs(void *inbuf, size_t nbytes)
+playoutputs(Format *fmt, void *inbuf, size_t nbytes)
 {
 	Outputdesc *desc;
 	int i, r = 0;
@@ -186,7 +184,7 @@ playoutputs(void *inbuf, size_t nbytes)
 		desc = &outputdescs[i];
 		if (!desc->enabled)
 			continue;
-		if (playoutput(desc, inbuf, nbytes) < 0)
+		if (playoutput(fmt, desc, inbuf, nbytes) < 0)
 			r = -1;
 	}
 	return r;

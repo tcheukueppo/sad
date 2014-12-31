@@ -75,7 +75,7 @@ playaudio(void)
 
 	switch (s->state) {
 	case PREPARE:
-		if (s->decoder->open(s->path) < 0) {
+		if (s->decoder->open(&s->fmt, s->path) < 0) {
 			s->state = NONE;
 			return;
 		}
@@ -86,7 +86,7 @@ playaudio(void)
 			playsong(picknextsong());
 			notify(EVSONGFINISHED);
 		} else {
-			playoutputs(buf, nbytes);
+			playoutputs(&s->fmt, buf, nbytes);
 		}
 		break;
 	}

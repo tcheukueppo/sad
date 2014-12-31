@@ -17,7 +17,7 @@ wavinit(void)
 }
 
 static int
-wavopen(const char *name)
+wavopen(Format *fmt, const char *name)
 {
 	int bits;
 
@@ -51,7 +51,11 @@ wavopen(const char *name)
 		goto err0;
 	}
 
-	if (initresamplers(sfinfo.samplerate) < 0)
+	fmt->bits = bits;
+	fmt->rate = sfinfo.samplerate;
+	fmt->channels = sfinfo.channels;
+
+	if (initresamplers(fmt) < 0)
 		goto err0;
 
 	return 0;

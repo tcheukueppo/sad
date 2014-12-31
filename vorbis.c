@@ -17,7 +17,7 @@ vorbisinit(void)
 }
 
 static int
-vorbisopen(const char *name)
+vorbisopen(Format *fmt, const char *name)
 {
 	int r;
 	vorbis_info *vi;
@@ -34,7 +34,11 @@ vorbisopen(const char *name)
 		goto err0;
 	}
 
-	if (initresamplers(vi->rate) < 0)
+	fmt->bits = 16;
+	fmt->rate = vi->rate;
+	fmt->channels = vi->channels;
+
+	if (initresamplers(fmt) < 0)
 		goto err0;
 
 	return 0;

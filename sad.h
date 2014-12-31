@@ -27,8 +27,14 @@ enum {
 };
 
 typedef struct {
+	int bits;
+	int rate;
+	int channels;
+} Format;
+
+typedef struct {
 	int (*init)(void);
-	int (*open)(const char *);
+	int (*open)(Format *, const char *);
 	int (*decode)(void *, int);
 	int (*close)(void);
 	void (*exit)(void);
@@ -46,6 +52,7 @@ typedef struct {
 	int      id;
 	int      state;
 	Decoder *decoder;
+	Format   fmt;
 } Song;
 
 typedef struct {
@@ -123,12 +130,12 @@ int initdecoders(void);
 Decoder *matchdecoder(const char *);
 
 /* output.c */
-int initresamplers(int);
+int initresamplers(Format *);
 int openoutputs(void);
 int closeoutputs(void);
 int enableoutput(const char *);
 int disableoutput(const char *);
-int playoutputs(void *, size_t);
+int playoutputs(Format *, void *, size_t);
 int setvol(int);
 
 /* notify.c */

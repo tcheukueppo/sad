@@ -26,7 +26,7 @@ mp3init(void)
 }
 
 static int
-mp3open(const char *name)
+mp3open(Format *fmt, const char *name)
 {
 	int  r;
 	long rate;
@@ -44,7 +44,11 @@ mp3open(const char *name)
 		goto err0;
 	}
 
-	if (initresamplers(rate) < 0)
+	fmt->bits = mpg123_encsize(encoding) * 8;
+	fmt->rate = rate;
+	fmt->channels = channels;
+
+	if (initresamplers(fmt) < 0)
 		goto err0;
 
 	return 0;
