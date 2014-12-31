@@ -178,13 +178,17 @@ playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 		return 0;
 
 	/* perform mono to stereo conversion */
-	inbuf = NULL;
 	if (fmt->channels == 1 && desc->fmt.channels == 2) {
 		inbuf = malloc(nbytes * 2);
 		if (!inbuf)
 			err(1, "malloc");
 		s16monotostereo(buf, buf, inbuf, nbytes / 2);
 		nbytes *= 2;
+	} else {
+		inbuf = malloc(nbytes);
+		if (!inbuf)
+			err(1, "malloc");
+		memcpy(inbuf, buf, nbytes);
 	}
 
 	if (desc->fmt.rate == fmt->rate) {
