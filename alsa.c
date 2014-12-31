@@ -31,10 +31,16 @@ alsaopen(int bits, int rate, int channels)
 	if ((r = snd_pcm_set_params(hdl, format, SND_PCM_ACCESS_RW_INTERLEAVED,
 	     channels, rate, 1, 500000)) < 0) {
 		warnx("send_pcm_set_params: %s\n", snd_strerror(r));
-		return -1;
+		goto err0;
 	}
+
 	framesize = (bits + 7) / 8 * channels;
 	return 0;
+
+err0:
+	snd_pcm_close(hdl);
+	hdl = NULL;
+	return -1;
 }
 
 static int
