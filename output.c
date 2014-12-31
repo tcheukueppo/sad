@@ -152,13 +152,13 @@ closeoutputs(void)
 }
 
 static void
-s16monotostereo(short *l, short *r, short *out, size_t nsamples)
+s16monotostereo(short *in, short *out, size_t nsamples)
 {
 	size_t i;
 
 	for (i = 0; i < nsamples; ++i) {
-		out[i * 2] = l[i];
-		out[i * 2 + 1] = r[i];
+		out[i * 2] = in[i];
+		out[i * 2 + 1] = in[i];
 	}
 }
 
@@ -182,7 +182,7 @@ playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 		inbuf = malloc(nbytes * 2);
 		if (!inbuf)
 			err(1, "malloc");
-		s16monotostereo(buf, buf, inbuf, nbytes / 2);
+		s16monotostereo(buf, inbuf, nbytes / 2);
 		nbytes *= 2;
 	} else {
 		inbuf = malloc(nbytes);
