@@ -1,4 +1,4 @@
-#define RESAMPLEQUALITY SOXR_VHQ /* very high quality, higher cpu usage */
+#define RESAMPLEQUALITY SOXR_QQ
 
 Outputdesc outputdescs[] = {
 	{ "sndio", 16, 44100, 2, 0, 0, &sndiooutput, NULL, -1 },
