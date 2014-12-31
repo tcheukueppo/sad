@@ -122,6 +122,7 @@ main(int argc, char *argv[])
 	fdmax = listenfd;
 
 	initdecoders();
+	initoutputs();
 	openoutputs();
 	initnotifier();
 

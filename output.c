@@ -19,7 +19,32 @@ typedef struct {
 	soxr_t  resampler;
 } Outputdesc;
 
+typedef struct {
+	char   *name;
+	Format  fmt;
+	int     enabled;
+	Output *output;
+} Outputcfg;
+
 #include "config.h"
+
+static Outputdesc outputdescs[LEN(outputcfgs)];
+
+int
+initoutputs(void)
+{
+	int i;
+
+	for (i = 0; i < LEN(outputcfgs); i++) {
+		outputdescs[i].name = outputcfgs[i].name;
+		outputdescs[i].fmt = outputcfgs[i].fmt;
+		outputdescs[i].enabled = outputcfgs[i].enabled;
+		outputdescs[i].output = outputcfgs[i].output;
+		outputdescs[i].active = 0;
+		outputdescs[i].resampler = NULL;
+	}
+	return 0;
+}
 
 static int
 initresampler(Format *fmt, Outputdesc *desc)

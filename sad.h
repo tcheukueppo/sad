@@ -130,6 +130,7 @@ int initdecoders(void);
 Decoder *matchdecoder(const char *);
 
 /* output.c */
+int initoutputs(void);
 int initresamplers(Format *);
 int openoutputs(void);
 int closeoutputs(void);

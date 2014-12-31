@@ -1,6 +1,6 @@
 #define RESAMPLEQUALITY SOXR_QQ
 
-Outputdesc outputdescs[] = {
+Outputcfg outputcfgs[] = {
 	{
 		.name = "sndio",
 		.fmt = {
@@ -9,9 +9,7 @@ Outputdesc outputdescs[] = {
 			.channels = 2
 		},
 		.enabled = 0,
-		.active = 0,
-		.output = &sndiooutput,
-		.resampler = NULL
+		.output = &sndiooutput
 	},
 	{
 		.name = "alsa",
@@ -21,9 +19,7 @@ Outputdesc outputdescs[] = {
 			.channels = 2
 		},
 		.enabled = 0,
-		.active = 0,
-		.output = &alsaoutput,
-		.resampler = NULL
+		.output = &alsaoutput
 	},
 	{
 		.name = "fifo",
@@ -33,8 +29,6 @@ Outputdesc outputdescs[] = {
 			.channels = 2
 		},
 		.enabled = 0,
-		.active = 0,
-		.output = &fifooutput,
-		.resampler = NULL
+		.output = &fifooutput
 	},
 };
