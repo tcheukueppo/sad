@@ -42,7 +42,7 @@ typedef struct {
 
 typedef struct {
 	int (*vol)(int);
-	int (*open)(int, int, int);
+	int (*open)(Format *);
 	int (*play)(void *, size_t);
 	int (*close)(void);
 } Output;

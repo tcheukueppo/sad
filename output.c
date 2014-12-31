@@ -12,9 +12,7 @@
 
 typedef struct {
 	char   *name;
-	int     bits;
-	int     rate;
-	int     channels;
+	Format  fmt;
 	int     enabled;
 	int     active;
 	Output *output;
@@ -35,8 +33,8 @@ initresampler(Format *fmt, Outputdesc *desc)
 
 	if (desc->resampler)
 		soxr_delete(desc->resampler);
-	desc->resampler = soxr_create(fmt->rate, desc->rate,
-	                              desc->channels,
+	desc->resampler = soxr_create(fmt->rate, desc->fmt.rate,
+	                              desc->fmt.channels,
 	                              NULL,
 	                              &iospec,
 	                              &quality,
@@ -73,9 +71,7 @@ openoutput(Outputdesc *desc)
 	if (desc->active)
 		return 0;
 
-	if (desc->output->open(desc->bits,
-	                       desc->rate,
-	                       desc->channels) < 0) {
+	if (desc->output->open(&desc->fmt) < 0) {
 		desc->active = 0;
 		return -1;
 	}
@@ -144,16 +140,16 @@ playoutput(Format *fmt, Outputdesc *desc, void *inbuf, size_t nbytes)
 	if (!desc->active)
 		return 0;
 
-	if (desc->rate == fmt->rate) {
+	if (desc->fmt.rate == fmt->rate) {
 		if (desc->output->play(inbuf, nbytes) < 0)
 			return -1;
 		return 0;
 	}
 
 	/* perform SRC */
-	framesize = (desc->bits + 7) / 8 * desc->channels;
+	framesize = (desc->fmt.bits + 7) / 8 * desc->fmt.channels;
 	inframes = nbytes / framesize;
-	ratio = (float)desc->rate / fmt->rate;
+	ratio = (float)desc->fmt.rate / fmt->rate;
 	outframes = inframes * ratio + 1;
 	outbuf = malloc(outframes * framesize);
 	if (!outbuf)

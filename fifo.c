@@ -19,7 +19,7 @@ fifovol(int vol)
 }
 
 static int
-fifoopen(int bits, int rate, int channels)
+fifoopen(Format *fmt)
 {
 	unlink("/tmp/sad-fifo");
 	if (mkfifo("/tmp/sad-fifo", 0644) < 0) {

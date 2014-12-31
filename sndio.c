@@ -20,7 +20,7 @@ sndiovol(int vol)
 }
 
 static int
-sndioopen(int bits, int rate, int channels)
+sndioopen(Format *fmt)
 {
 	struct sio_par par;
 
@@ -31,9 +31,9 @@ sndioopen(int bits, int rate, int channels)
 	}
 
 	sio_initpar(&par);
-	par.bits = bits;
-	par.rate = rate;
-	par.pchan = channels;
+	par.bits = fmt->bits;
+	par.rate = fmt->rate;
+	par.pchan = fmt->channels;
 	par.sig = 1;
 	par.le = SIO_LE_NATIVE;
 
@@ -42,8 +42,8 @@ sndioopen(int bits, int rate, int channels)
 		goto err0;
 	}
 
-	if (par.bits != bits || par.rate != rate ||
-	    par.pchan != channels || par.le != SIO_LE_NATIVE ||
+	if (par.bits != fmt->bits || par.rate != fmt->rate ||
+	    par.pchan != fmt->channels || par.le != SIO_LE_NATIVE ||
 	    par.sig != 1) {
 		warnx("unsupported audio params");
 		goto err0;

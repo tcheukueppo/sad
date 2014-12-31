@@ -60,7 +60,7 @@ err0:
 }
 
 static int
-alsaopen(int bits, int rate, int channels)
+alsaopen(Format *fmt)
 {
 	snd_pcm_format_t format = SND_PCM_FORMAT_S16_LE;
 	int r;
@@ -71,12 +71,12 @@ alsaopen(int bits, int rate, int channels)
 	}
 
 	if ((r = snd_pcm_set_params(hdl, format, SND_PCM_ACCESS_RW_INTERLEAVED,
-	     channels, rate, 1, 500000)) < 0) {
+	     fmt->channels, fmt->rate, 1, 500000)) < 0) {
 		warnx("send_pcm_set_params: %s\n", snd_strerror(r));
 		goto err0;
 	}
 
-	framesize = (bits + 7) / 8 * channels;
+	framesize = (fmt->bits + 7) / 8 * fmt->channels;
 	return 0;
 
 err0:
