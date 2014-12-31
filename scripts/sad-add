@@ -21,6 +21,7 @@ $paths
 
 # add library to playlist.
 echo "library" | nc -U "$sock" | while read -r song; do
+	if test "$song" = "OK"; then continue; fi
 	id=$(printf '%s' "$song" | cut -d ':' -f 1)
 	echo "add" "$id"
 done | nc -U "$sock"
