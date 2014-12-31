@@ -1,4 +1,3 @@
-/* reference: http://www.alsa-project.org/alsa-doc/alsa-lib/_2test_2pcm_min_8c-example.html */
 #include <sys/select.h>
 
 #include <err.h>
@@ -16,7 +15,49 @@ static const char *device = "default"; /* TODO: make configurable? */
 static int
 alsavol(int vol)
 {
+	long min, max;
+	snd_mixer_t *mixerhdl;
+	snd_mixer_elem_t *elem;
+	snd_mixer_selem_id_t *sid;
+	const char *selem_name = "Master";
+
+	if (snd_mixer_open(&mixerhdl, 0) < 0) {
+		warnx("snd_mixer_open: failed");
+		return -1;
+	}
+
+	if (snd_mixer_attach(mixerhdl, device) < 0) {
+		warnx("snd_mixer_attach: failed");
+		goto err0;
+	}
+
+	if (snd_mixer_selem_register(mixerhdl, NULL, NULL) < 0) {
+		warnx("snd_mixer_selem_register: failed");
+		goto err0;
+	}
+
+	if (snd_mixer_load(mixerhdl) < 0) {
+		warnx("snd_mixer_load: failed");
+		goto err0;
+	}
+
+	snd_mixer_selem_id_alloca(&sid);
+	snd_mixer_selem_id_set_index(sid, 0);
+	snd_mixer_selem_id_set_name(sid, selem_name);
+	elem = snd_mixer_find_selem(mixerhdl, sid);
+	if (!elem) {
+		warnx("snd_mixer_find_selem: failed");
+		goto err0;
+	}
+
+	snd_mixer_selem_get_playback_volume_range(elem, &min, &max);
+	snd_mixer_selem_set_playback_volume_all(elem, vol * max / 100);
+
+	snd_mixer_close(mixerhdl);
 	return 0;
+err0:
+	snd_mixer_close(mixerhdl);
+	return -1;
 }
 
 static int

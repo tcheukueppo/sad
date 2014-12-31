@@ -12,7 +12,7 @@ static struct sio_hdl *hdl;
 static int
 sndiovol(int vol)
 {
-	if (hdl && !sio_setvol(hdl, (SIO_MAXVOL * vol) / 100)) {
+	if (!sio_setvol(hdl, (SIO_MAXVOL * vol) / 100)) {
 		warnx("sio_setvol: failed");
 		return -1;
 	}

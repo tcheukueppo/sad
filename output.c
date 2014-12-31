@@ -13,7 +13,7 @@
 typedef struct {
 	char   *name;
 	int     bits;
-	long    rate;
+	int     rate;
 	int     channels;
 	int     enabled;
 	int     active;
@@ -184,7 +184,7 @@ playoutputs(void *inbuf, size_t nbytes)
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
-		if (!desc->active)
+		if (!desc->enabled)
 			continue;
 		if (playoutput(desc, inbuf, nbytes) < 0)
 			r = -1;
@@ -200,7 +200,7 @@ setvol(int vol)
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
-		if (!desc->active)
+		if (!desc->enabled)
 			continue;
 		if (desc->output->vol(vol) < 0)
 			r = -1;
