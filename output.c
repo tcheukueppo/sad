@@ -191,7 +191,7 @@ playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 		memcpy(inbuf, buf, nbytes);
 	}
 
-	if (desc->fmt.rate == fmt->rate) {
+	if (fmt->rate == desc->fmt.rate) {
 		if (desc->output->play(inbuf, nbytes) < 0) {
 			free(inbuf);
 			return -1;
