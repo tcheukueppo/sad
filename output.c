@@ -111,14 +111,9 @@ closeoutput(Outputdesc *desc)
 	if (!desc->active)
 		return 0;
 
-	if (desc->output->close() < 0) {
-		desc->active = 1;
-		return -1;
-	}
-
 	printf("Closed %s output\n", desc->name);
 	desc->active = 0;
-	return 0;
+	return desc->output->close();
 }
 
 int
@@ -223,8 +218,6 @@ enableoutput(const char *name)
 		desc = &outputdescs[i];
 		if (strcmp(desc->name, name))
 			continue;
-		if (desc->active)
-			return -1;
 		if (openoutput(desc) < 0) {
 			desc->enabled = 0;
 			return -1;
@@ -246,15 +239,8 @@ disableoutput(const char *name)
 		desc = &outputdescs[i];
 		if (strcmp(desc->name, name))
 			continue;
-		if (!desc->active)
-			return -1;
-		if (closeoutput(desc) < 0) {
-			desc->enabled = 1;
-			return -1;
-		} else {
-			desc->enabled = 0;
-			return 0;
-		}
+		desc->enabled = 0;
+		return closeoutput(desc);
 	}
 	return -1;
 }
