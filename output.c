@@ -151,13 +151,25 @@ closeoutputs(void)
 	return r;
 }
 
+static void
+s16monotostereo(short *l, short *r, short *out, size_t nsamples)
+{
+	size_t i;
+
+	for (i = 0; i < nsamples; ++i) {
+		out[i * 2] = l[i];
+		out[i * 2 + 1] = r[i];
+	}
+}
+
 static int
-playoutput(Format *fmt, Outputdesc *desc, void *inbuf, size_t nbytes)
+playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 {
 	soxr_error_t e;
 	size_t inframes, outframes;
 	size_t framesize;
 	size_t idone, odone;
+	void  *inbuf;
 	void  *outbuf;
 	float  ratio;
 	int    i;
@@ -165,9 +177,22 @@ playoutput(Format *fmt, Outputdesc *desc, void *inbuf, size_t nbytes)
 	if (!desc->active)
 		return 0;
 
+	/* perform mono to stereo conversion */
+	inbuf = NULL;
+	if (fmt->channels == 1 && desc->fmt.channels == 2) {
+		inbuf = malloc(nbytes * 2);
+		if (!inbuf)
+			err(1, "malloc");
+		s16monotostereo(buf, buf, inbuf, nbytes / 2);
+		nbytes *= 2;
+	}
+
 	if (desc->fmt.rate == fmt->rate) {
-		if (desc->output->play(inbuf, nbytes) < 0)
+		if (desc->output->play(inbuf, nbytes) < 0) {
+			free(inbuf);
 			return -1;
+		}
+		free(inbuf);
 		return 0;
 	}
 
@@ -186,11 +211,13 @@ playoutput(Format *fmt, Outputdesc *desc, void *inbuf, size_t nbytes)
 	if (!e) {
 		if (desc->output->play(outbuf, odone * framesize) < 0)
 			return -1;
+		free(inbuf);
 		free(outbuf);
 		return 0;
 	}
 
 	warnx("soxr_process: failed");
+	free(inbuf);
 	free(outbuf);
 	return -1;
 }
