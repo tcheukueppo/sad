@@ -271,7 +271,8 @@ cmdplaylist(int fd, char *arg)
 
 static void
 cmdclose(int fd, char *arg)
-{	if (arg[0]) {
+{
+	if (arg[0]) {
 		dprintf(fd, "ERR unexpected argument\n");
 		return;
 	}
