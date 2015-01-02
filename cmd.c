@@ -303,18 +303,6 @@ cmdping(int fd, char *arg)
 }
 
 static void
-cmdsearch(int fd, char *arg)
-{
-	if (!arg[0]) {
-		dprintf(fd, "ERR expected search string\n");
-		return;
-	}
-	if (searchplaylist(fd, arg) < 0)
-		dprintf(fd, "ERR failed to search through playlist\n");
-	dprintf(fd, "OK\n");
-}
-
-static void
 cmdversion(int fd, char *arg)
 {
 	if (arg[0]) {
@@ -385,7 +373,6 @@ static Cmd cmds[] = {
 	{ "close",      cmdclose      },
 	{ "kill",       cmdkill       },
 	{ "ping",       cmdping       },
-	{ "search",     cmdsearch     },
 	{ "version",    cmdversion    },
 	{ "enable",     cmdenable     },
 	{ "disable",    cmddisable    },

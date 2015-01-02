@@ -43,10 +43,6 @@ playlist
 Dump the current playlist.  The output has the following form:
 "%d: %s\n", id, filepath
 
-search regex
-Search for a song matching the given regex in the playlist.  At the moment it
-will only consider file names.
-
 close
 Force the daemon to close the client connection.
 
