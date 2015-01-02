@@ -250,7 +250,7 @@ cmdempty(int fd, char *arg)
 }
 
 static void
-cmddelete(int fd, char *arg)
+cmdremove(int fd, char *arg)
 {
 }
 
@@ -401,7 +401,7 @@ static Cmd cmds[] = {
 	{ "add",        cmdadd        },
 	{ "clear",      cmdclear      },
 	{ "empty",      cmdempty      },
-	{ "delete",     cmddelete     },
+	{ "remove",     cmdremove     },
 	{ "playlist",   cmdplaylist   },
 	{ "library",    cmdlibrary    },
 	{ "learn",      cmdlearn      },

@@ -29,9 +29,8 @@ Play previous song.
 stop
 Stop playback.
 
-add [ID]
-Add the given song ID from the library to the playlist.  If no ID
-is provided, all songs in the library are added.
+add ID
+Add the given song ID from the library to the playlist.
 
 clear
 Clear playlist and stop playback.
