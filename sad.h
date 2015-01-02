@@ -151,3 +151,5 @@ void removesubscriber(int);
 /* pcm.c */
 void s16monotostereo(short *, short *, size_t);
 void s16stereotomono(short *, short *, size_t);
+void s16tofloat(short *, float *, size_t);
+void floattos16(float *, short *, size_t);
