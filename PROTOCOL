@@ -39,7 +39,7 @@ empty
 Empty the library, clear playlist and stop playback.
 
 remove [ID]
-Delete the song with the given ID or if ID is not given, the currently
+Remove the song with the given ID or if ID is not given, the currently
 selected song from the playlist.
 
 playlist
