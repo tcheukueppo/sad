@@ -18,17 +18,6 @@ static struct {
 	{ ".ogg",  &vorbisdecoder },
 };
 
-int
-initdecoders(void)
-{
-	int i, r = 0;
-
-	for (i = 0; i < LEN(decodermap); i++)
-		if (decodermap[i].decoder->init() < 0)
-			r = -1;
-	return r;
-}
-
 Decoder *
 matchdecoder(const char *name)
 {

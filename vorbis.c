@@ -11,12 +11,6 @@ static OggVorbis_File vf;
 static int cursect;
 
 static int
-vorbisinit(void)
-{
-	return 0;
-}
-
-static int
 vorbisopen(Format *fmt, const char *name)
 {
 	int r;
@@ -75,15 +69,8 @@ vorbisclose(void)
 	return ov_clear(&vf);
 }
 
-static void
-vorbisexit(void)
-{
-}
-
 Decoder vorbisdecoder = {
-	.init = vorbisinit,
 	.open = vorbisopen,
 	.decode = vorbisdecode,
-	.close = vorbisclose,
-	.exit = vorbisexit
+	.close = vorbisclose
 };

@@ -33,11 +33,9 @@ typedef struct {
 } Format;
 
 typedef struct {
-	int (*init)(void);
 	int (*open)(Format *, const char *);
 	int (*decode)(void *, int);
 	int (*close)(void);
-	void (*exit)(void);
 } Decoder;
 
 typedef struct {
@@ -116,7 +114,6 @@ int gettokens(char *, char **, int, char *);
 int tokenize(char *, char **, int);
 
 /* decoder.c */
-int initdecoders(void);
 Decoder *matchdecoder(const char *);
 
 /* output.c */

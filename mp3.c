@@ -10,8 +10,12 @@
 static mpg123_handle *hdl;
 
 static int
-mp3init(void)
+mp3open(Format *fmt, const char *name)
 {
+	int  r;
+	long rate;
+	int  channels, encoding;
+
 	if (mpg123_init() != MPG123_OK) {
 		warnx("mpg123_init: failed");
 		return -1;
@@ -20,28 +24,19 @@ mp3init(void)
 	hdl = mpg123_new(NULL, NULL);
 	if (!hdl) {
 		warnx("mpg123_new: failed");
-		return -1;
+		goto err0;
 	}
-	return 0;
-}
-
-static int
-mp3open(Format *fmt, const char *name)
-{
-	int  r;
-	long rate;
-	int  channels, encoding;
 
 	r = mpg123_open(hdl, name);
 	if (r != MPG123_OK) {
 		warnx("mpg123_open: failed");
-		return -1;
+		goto err1;
 	}
 
 	r = mpg123_getformat(hdl, &rate, &channels, &encoding);
 	if (r != MPG123_OK) {
 		warnx("mpg123_getformat: failed");
-		goto err0;
+		goto err2;
 	}
 
 	fmt->bits = mpg123_encsize(encoding) * 8;
@@ -49,11 +44,17 @@ mp3open(Format *fmt, const char *name)
 	fmt->channels = channels;
 
 	if (initresamplers(fmt) < 0)
-		goto err0;
+		goto err2;
 
 	return 0;
-err0:
+
+err2:
 	mpg123_close(hdl);
+err1:
+	mpg123_delete(hdl);
+err0:
+	mpg123_exit();
+	hdl = NULL;
 	return -1;
 }
 
@@ -76,27 +77,22 @@ mp3decode(void *buf, int nbytes)
 static int
 mp3close(void)
 {
-	if (mpg123_close(hdl) != MPG123_OK) {
-		warnx("mpg123_close: failed");
-		return -1;
-	}
-	return 0;
-}
+	int r = 0;
 
-static void
-mp3exit(void)
-{
 	if (hdl) {
+		if (mpg123_close(hdl) != MPG123_OK) {
+			warnx("mpg123_close: failed");
+			r = -1;
+		}
 		mpg123_delete(hdl);
 		mpg123_exit();
 	}
 	hdl = NULL;
+	return 0;
 }
 
 Decoder mp3decoder = {
-	.init = mp3init,
 	.open = mp3open,
 	.decode = mp3decode,
-	.close = mp3close,
-	.exit = mp3exit
+	.close = mp3close
 };
