@@ -252,6 +252,30 @@ cmdempty(int fd, char *arg)
 static void
 cmdremove(int fd, char *arg)
 {
+	Song *s;
+	const char *errstr;
+	int   id;
+
+	if (!arg[0]) {
+		s = getcursong();
+		stopsong(s);
+	} else {
+		id = strtonum(arg, 0, INT_MAX, &errstr);
+		if (errstr) {
+			dprintf(fd, "ERR invalid song id\n");
+			return;
+		}
+		s = findsongid(id);
+		if (!s) {
+			dprintf(fd, "ERR cannot find song with given id\n");
+			return;
+		}
+	}
+	if (rmplaylist(s->id) < 0) {
+		dprintf(fd, "ERR failed to remove song\n");
+		return;
+	}
+	dprintf(fd, "OK\n");
 }
 
 static void

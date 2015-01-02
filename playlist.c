@@ -36,6 +36,25 @@ addplaylist(int id)
 	return s;
 }
 
+int
+rmplaylist(int id)
+{
+	Song *s;
+	int   i;
+
+	for (i = 0; i < playlist.nsongs; i++)
+		if (playlist.songs[i]->id == id)
+			break;
+	if (i == playlist.nsongs)
+		return -1;
+	s = getnextsong();
+	memmove(&playlist.songs[i], &playlist.songs[i+1],
+	        (playlist.nsongs - i - 1) * sizeof(*playlist.songs[i]));
+	putcursong(s);
+	playlist.nsongs--;
+	return 0;
+}
+
 Song *
 getnextsong(void)
 {

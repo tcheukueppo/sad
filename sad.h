@@ -84,6 +84,7 @@ int docmd(int);
 
 /* playlist.c */
 Song *addplaylist(int);
+int rmplaylist(int);
 Song *getnextsong(void);
 Song *getprevsong(void);
 Song *getcursong(void);
