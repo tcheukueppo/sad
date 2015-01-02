@@ -256,10 +256,7 @@ cmdremove(int fd, char *arg)
 	const char *errstr;
 	int   id;
 
-	if (!arg[0]) {
-		s = getcursong();
-		stopsong(s);
-	} else {
+	if (arg[0]) {
 		id = strtonum(arg, 0, INT_MAX, &errstr);
 		if (errstr) {
 			dprintf(fd, "ERR invalid song id\n");
@@ -270,7 +267,11 @@ cmdremove(int fd, char *arg)
 			dprintf(fd, "ERR cannot find song with given id\n");
 			return;
 		}
+	} else {
+		s = getcursong();
+		stopsong(s);
 	}
+
 	if (rmplaylist(s->id) < 0) {
 		dprintf(fd, "ERR failed to remove song\n");
 		return;
