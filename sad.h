@@ -147,3 +147,7 @@ int addsubscriber(int, int);
 int addsubscribername(int, const char *);
 int notify(int);
 void removesubscriber(int);
+
+/* pcm.c */
+void s16monotostereo(short *, short *, size_t);
+void s16stereotomono(short *, short *, size_t);

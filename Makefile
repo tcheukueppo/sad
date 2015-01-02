@@ -16,6 +16,7 @@ OBJ =\
 	mp3.o\
 	notify.o\
 	output.o\
+	pcm.o\
 	playlist.o\
 	sad.o\
 	sndio.o\
