@@ -5,7 +5,7 @@ Outputcfg outputcfgs[] = {
 		.name = "sndio",
 		.fmt = {
 			.bits = 16,
-			.rate = 44100,
+			.rate = 48000,
 			.channels = 2
 		},
 		.enabled = 0,
@@ -15,7 +15,7 @@ Outputcfg outputcfgs[] = {
 		.name = "alsa",
 		.fmt = {
 			.bits = 16,
-			.rate = 44100,
+			.rate = 48000,
 			.channels = 2
 		},
 		.enabled = 1,
@@ -25,7 +25,7 @@ Outputcfg outputcfgs[] = {
 		.name = "fifo",
 		.fmt = {
 			.bits = 16,
-			.rate = 44100,
+			.rate = 48000,
 			.channels = 2
 		},
 		.enabled = 0,

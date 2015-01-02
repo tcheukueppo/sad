@@ -76,7 +76,7 @@ alsaopen(Format *fmt)
 	}
 
 	if ((r = snd_pcm_set_params(hdl, format, SND_PCM_ACCESS_RW_INTERLEAVED,
-	     fmt->channels, fmt->rate, 1, 500000)) < 0) {
+	     fmt->channels, fmt->rate, 0, 50000)) < 0) {
 		warnx("send_pcm_set_params: %s\n", snd_strerror(r));
 		goto err0;
 	}
