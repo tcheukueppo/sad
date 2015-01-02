@@ -29,14 +29,11 @@ Play previous song.
 stop
 Stop playback.
 
-add ID
-Add the given song ID from the library to the playlist.
+add path
+Add the given song path to the playlist.
 
 clear
 Clear playlist and stop playback.
-
-empty
-Empty the library, clear playlist and stop playback.
 
 remove [ID]
 Remove the song with the given ID or if ID is not given, the currently
@@ -46,19 +43,9 @@ playlist
 Dump the current playlist.  The output has the following form:
 "%d: %s\n", id, filepath
 
-library
-Dump the library.  The output has the following form:
-"%d: %s\n", id, filepath
-
 search regex
-Search for a song matching the given regex in the library.  At the moment it
+Search for a song matching the given regex in the playlist.  At the moment it
 will only consider file names.
-
-learn path
-Add the path to library.
-
-forget ID
-Forget the song with the given ID from the library.
 
 close
 Force the daemon to close the client connection.

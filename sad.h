@@ -64,12 +64,6 @@ typedef struct {
 } Playlist;
 
 typedef struct {
-	Song **songs;
-	size_t nsongs;
-	size_t maxsongs;
-} Library;
-
-typedef struct {
 	int   event;
 	char *name;
 } Eventdesc;
@@ -83,8 +77,10 @@ extern int      fdmax;
 int docmd(int);
 
 /* playlist.c */
-Song *addplaylist(int);
+Song *addplaylist(const char *);
 int rmplaylist(int);
+Song *findsong(const char *);
+Song *findsongid(int);
 Song *getnextsong(void);
 Song *getprevsong(void);
 Song *getcursong(void);
@@ -95,14 +91,7 @@ Song *picknextsong(void);
 void playsong(Song *);
 void stopsong(Song *);
 void playlistmode(int);
-
-/* library.c */
-Song *addlibrary(const char *);
-Song *findsong(const char *);
-Song *findsongid(int);
-void dumplibrary(int);
-int searchlibrary(int, const char *);
-void emptylibrary(void);
+int searchplaylist(int, const char *);
 
 /* wav.c */
 extern Decoder wavdecoder;

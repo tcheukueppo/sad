@@ -201,20 +201,13 @@ static void
 cmdadd(int fd, char *arg)
 {
 	const char *errstr;
-	int id;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR expected song id\n");
+		dprintf(fd, "ERR expected file path\n");
 		return;
 	}
 
-	id = strtonum(arg, 0, INT_MAX, &errstr);
-	if (errstr) {
-		dprintf(fd, "ERR invalid song id\n");
-		return;
-	}
-
-	if (!addplaylist(id)) {
+	if (!addplaylist(arg)) {
 		dprintf(fd, "ERR cannot add song to playlist\n");
 		return;
 	}
@@ -232,20 +225,6 @@ cmdclear(int fd, char *arg)
 
 	stopsong(getcursong());
 	clearplaylist();
-	dprintf(fd, "OK\n");
-}
-
-static void
-cmdempty(int fd, char *arg)
-{
-	if (arg[0]) {
-		dprintf(fd, "ERR unexpected argument\n");
-		return;
-	}
-
-	stopsong(getcursong());
-	clearplaylist();
-	emptylibrary();
 	dprintf(fd, "OK\n");
 }
 
@@ -291,31 +270,6 @@ cmdplaylist(int fd, char *arg)
 }
 
 static void
-cmdlibrary(int fd, char *arg)
-{
-	if (arg[0]) {
-		dprintf(fd, "ERR unexpected argument\n");
-		return;
-	}
-	dumplibrary(fd);
-	dprintf(fd, "OK\n");
-}
-
-static void
-cmdlearn(int fd, char *arg)
-{
-	if (!arg[0]) {
-		dprintf(fd, "ERR expected argument file path\n");
-		return;
-	}
-	if (!addlibrary(arg)) {
-		dprintf(fd, "ERR failed to add song to library\n");
-		return;
-	}
-	dprintf(fd, "OK\n");
-}
-
-static void
 cmdclose(int fd, char *arg)
 {	if (arg[0]) {
 		dprintf(fd, "ERR unexpected argument\n");
@@ -352,11 +306,12 @@ static void
 cmdsearch(int fd, char *arg)
 {
 	if (!arg[0]) {
-		dprintf(fd, "ERR expectede search string\n");
+		dprintf(fd, "ERR expected search string\n");
 		return;
 	}
-	if (searchlibrary(fd, arg) != -1)
-		dprintf(fd, "OK\n");
+	if (searchplaylist(fd, arg) < 0)
+		dprintf(fd, "ERR failed to search through playlist\n");
+	dprintf(fd, "OK\n");
 }
 
 static void
@@ -425,11 +380,8 @@ static Cmd cmds[] = {
 	{ "stop",       cmdstop       },
 	{ "add",        cmdadd        },
 	{ "clear",      cmdclear      },
-	{ "empty",      cmdempty      },
 	{ "remove",     cmdremove     },
 	{ "playlist",   cmdplaylist   },
-	{ "library",    cmdlibrary    },
-	{ "learn",      cmdlearn      },
 	{ "close",      cmdclose      },
 	{ "kill",       cmdkill       },
 	{ "ping",       cmdping       },
