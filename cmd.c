@@ -389,7 +389,7 @@ docmd(int clifd)
 	static  size_t sz;
 	static  size_t resid;
 	ssize_t n;
-	size_t cmdlen;
+	size_t  cmdlen;
 	char   *new_buf;
 	int     i, c;
 
