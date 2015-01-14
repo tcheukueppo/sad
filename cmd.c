@@ -15,6 +15,68 @@
 static void
 cmdstatus(int fd, char *arg)
 {
+	Song *s;
+	int ok = 0;
+
+	if (!arg[0]) {
+		dprintf(fd, "ERR expected argument\n");
+		return;
+	}
+
+	if (!strncmp(arg, "random", 7)) {
+		ok = 1;
+		dprintf(fd, "%d\n", getplaylistmode() & RANDOM == 1);
+	}
+
+	if (!strncmp(arg, "repeat", 7)) {
+		ok = 1;
+		dprintf(fd, "%d\n", getplaylistmode() & REPEAT == 1);
+	}
+
+	if (!strncmp(arg, "single", 7)) {
+		ok = 1;
+		dprintf(fd, "%d\n", getplaylistmode() & SINGLE == 1);
+	}
+
+	if (!strncmp(arg, "songid", 7)) {
+		ok = 1;
+		s = getcursong();
+
+		if (!s) {
+			dprintf(fd, "ERR no song is active\n");
+			return;
+		}
+
+		dprintf(fd, "%d\n", s->id);
+	}
+
+	if (!strncmp(arg, "playback", 9)) {
+		ok = 1;
+		s = getcursong();
+
+
+		if (s)
+			switch (s->state) {
+			case PLAYING:
+				dprintf(fd, "play\n");
+				break;
+			case PAUSED:
+				dprintf(fd, "pause\n");
+				break;
+			case NONE:
+				dprintf(fd, "stop\n");
+				break;
+			}
+		else
+			dprintf(fd, "stop\n");
+	}
+
+	if (ok) {
+		dprintf(fd, "OK\n");
+		return;
+	}
+
+	dprintf(fd, "ERR unknown command\n");
 }
 
 static void

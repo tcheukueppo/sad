@@ -18,8 +18,9 @@ enum {
 };
 
 enum {
-	REPEAT,
-	RANDOM
+	REPEAT = 1 << 0,
+	RANDOM = 1 << 1,
+	SINGLE = 1 << 2
 };
 
 enum {
