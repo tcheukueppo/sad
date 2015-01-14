@@ -90,6 +90,7 @@ Song *picknextsong(void);
 void playsong(Song *);
 void stopsong(Song *);
 void playlistmode(int);
+int getplaylistmode(void);
 int searchplaylist(int, const char *);
 
 /* wav.c */
