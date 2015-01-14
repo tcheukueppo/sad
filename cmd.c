@@ -26,19 +26,13 @@ cmdstatus(int fd, char *arg)
 	if (!strncmp(arg, "random", 7)) {
 		ok = 1;
 		dprintf(fd, "%d\n", getplaylistmode() & RANDOM == 1);
-	}
-
-	if (!strncmp(arg, "repeat", 7)) {
+	} else if (!strncmp(arg, "repeat", 7)) {
 		ok = 1;
 		dprintf(fd, "%d\n", getplaylistmode() & REPEAT == 1);
-	}
-
-	if (!strncmp(arg, "single", 7)) {
+	} else if (!strncmp(arg, "single", 7)) {
 		ok = 1;
 		dprintf(fd, "%d\n", getplaylistmode() & SINGLE == 1);
-	}
-
-	if (!strncmp(arg, "songid", 7)) {
+	} else if (!strncmp(arg, "songid", 7)) {
 		ok = 1;
 		s = getcursong();
 
@@ -48,9 +42,7 @@ cmdstatus(int fd, char *arg)
 		}
 
 		dprintf(fd, "%d\n", s->id);
-	}
-
-	if (!strncmp(arg, "playback", 9)) {
+	} else if (!strncmp(arg, "playback", 9)) {
 		ok = 1;
 		s = getcursong();
 
