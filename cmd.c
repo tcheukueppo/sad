@@ -46,7 +46,6 @@ cmdstatus(int fd, char *arg)
 		ok = 1;
 		s = getcursong();
 
-
 		if (s)
 			switch (s->state) {
 			case PLAYING:
