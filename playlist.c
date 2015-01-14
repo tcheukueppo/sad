@@ -223,7 +223,8 @@ playlistmode(int mode)
 	playlist.mode = mode;
 }
 
-int getplaylistmode(void)
+int
+getplaylistmode(void)
 {
 	return playlist.mode;
 }
