@@ -16,7 +16,7 @@ static void
 cmdstatus(int fd, char *arg)
 {
 	Song *s;
-	int ok = 0;
+	int r = 0;
 
 	if (!arg[0]) {
 		dprintf(fd, "ERR expected argument\n");
@@ -24,16 +24,16 @@ cmdstatus(int fd, char *arg)
 	}
 
 	if (!strncmp(arg, "random", 7)) {
-		ok = 1;
+		r = 1;
 		dprintf(fd, "random: %d\n", getplaylistmode() & RANDOM == 1);
 	} else if (!strncmp(arg, "repeat", 7)) {
-		ok = 1;
+		r = 1;
 		dprintf(fd, "repeat: %d\n", getplaylistmode() & REPEAT == 1);
 	} else if (!strncmp(arg, "single", 7)) {
-		ok = 1;
+		r = 1;
 		dprintf(fd, "single: %d\n", getplaylistmode() & SINGLE == 1);
 	} else if (!strncmp(arg, "songid", 7)) {
-		ok = 1;
+		r = 1;
 		s = getcursong();
 
 		if (!s) {
@@ -43,7 +43,7 @@ cmdstatus(int fd, char *arg)
 
 		dprintf(fd, "songid: %d\n", s->id);
 	} else if (!strncmp(arg, "playback", 9)) {
-		ok = 1;
+		r = 1;
 		s = getcursong();
 
 		dprintf(fd, "playback: ");
@@ -64,7 +64,7 @@ cmdstatus(int fd, char *arg)
 			dprintf(fd, "stop\n");
 	}
 
-	if (ok) {
+	if (r) {
 		dprintf(fd, "OK\n");
 		return;
 	}
