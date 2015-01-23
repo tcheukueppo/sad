@@ -2,8 +2,6 @@
 #include "compat.h"
 #endif
 
-#include <limits.h>
-
 #define LEN(x) (sizeof (x) / sizeof *(x))
 #define PROTOCOLVERSION "0.0"
 
