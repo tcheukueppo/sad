@@ -15,12 +15,16 @@ static int fifofd = -1;
 static int
 fifovol(int vol)
 {
+	(void)vol;
+
 	return 0;
 }
 
 static int
 fifoopen(Format *fmt)
 {
+	(void)fmt;
+
 	unlink("/tmp/sad-fifo");
 	if (mkfifo("/tmp/sad-fifo", 0644) < 0) {
 		warn("mkfifo /tmp/sad-fifo");

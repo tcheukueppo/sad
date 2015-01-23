@@ -2,6 +2,8 @@
 #include "compat.h"
 #endif
 
+#include <limits.h>
+
 #define LEN(x) (sizeof (x) / sizeof *(x))
 #define PROTOCOLVERSION "0.0"
 
@@ -28,9 +30,9 @@ enum {
 };
 
 typedef struct {
-	int bits;
-	int rate;
-	int channels;
+	unsigned int bits;
+	unsigned int rate;
+	unsigned int channels;
 } Format;
 
 typedef struct {

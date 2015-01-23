@@ -22,7 +22,7 @@ Decoder *
 matchdecoder(const char *name)
 {
 	char *ext;
-	int   i;
+	size_t i;
 
 	ext = strrchr(name, '.');
 	if (!ext)

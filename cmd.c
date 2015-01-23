@@ -25,13 +25,13 @@ cmdstatus(int fd, char *arg)
 
 	if (!strncmp(arg, "random", 7)) {
 		r = 1;
-		dprintf(fd, "random: %d\n", getplaylistmode() & RANDOM == 1);
+		dprintf(fd, "random: %d\n", (getplaylistmode() & RANDOM) == 1);
 	} else if (!strncmp(arg, "repeat", 7)) {
 		r = 1;
-		dprintf(fd, "repeat: %d\n", getplaylistmode() & REPEAT == 1);
+		dprintf(fd, "repeat: %d\n", (getplaylistmode() & REPEAT) == 1);
 	} else if (!strncmp(arg, "single", 7)) {
 		r = 1;
-		dprintf(fd, "single: %d\n", getplaylistmode() & SINGLE == 1);
+		dprintf(fd, "single: %d\n", (getplaylistmode() & SINGLE) == 1);
 	} else if (!strncmp(arg, "songid", 7)) {
 		r = 1;
 		s = getcursong();
@@ -255,8 +255,6 @@ cmdstop(int fd, char *arg)
 static void
 cmdadd(int fd, char *arg)
 {
-	const char *errstr;
-
 	if (!arg[0]) {
 		dprintf(fd, "ERR expected file path\n");
 		return;
@@ -444,9 +442,9 @@ docmd(int clifd)
 	static  size_t sz;
 	static  size_t resid;
 	ssize_t n;
-	size_t  cmdlen;
+	size_t  cmdlen, i;
 	char   *new_buf;
-	int     i, c;
+	int     c;
 
 	/* If no buffer, set it up.  */
 	if (!buf) {

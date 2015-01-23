@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "queue.h"
 #include "sad.h"
@@ -24,13 +25,14 @@ int
 initnotifier(void)
 {
 	TAILQ_INIT(&subscribers);
+	return 0;
 }
 
 int
 addsubscriber(int clifd, int event)
 {
 	struct subscriber *s;
-	int    i;
+	size_t i;
 
 	for (i = 0; i < LEN(Eventmap); i++)
 		if (Eventmap[i].event == event)
@@ -57,7 +59,7 @@ addsubscriber(int clifd, int event)
 int
 addsubscribername(int clifd, const char *name)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < LEN(Eventmap); i++)
 		if (!strcmp(Eventmap[i].name, name))
@@ -69,7 +71,7 @@ int
 notify(int event)
 {
 	struct subscriber *s, *tmp;
-	int    i;
+	size_t i;
 
 	for (i = 0; i < LEN(Eventmap); i++)
 		if (Eventmap[i].event == event)

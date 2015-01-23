@@ -53,7 +53,7 @@ int
 rmplaylist(int id)
 {
 	Song *s;
-	int   i;
+	size_t i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = playlist.songs[i];
@@ -76,7 +76,7 @@ Song *
 findsong(const char *path)
 {
 	Song *s;
-	int   i;
+	size_t i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = playlist.songs[i];
@@ -90,7 +90,7 @@ Song *
 findsongid(int id)
 {
 	Song *s;
-	int   i;
+	size_t i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = playlist.songs[i];
@@ -104,7 +104,7 @@ Song *
 getnextsong(void)
 {
 	Song *s, *cur;
-	int   i;
+	size_t i;
 
 	cur = playlist.cursong;
 	for (i = 0; i < playlist.nsongs; i++) {
@@ -125,7 +125,7 @@ Song *
 getprevsong(void)
 {
 	Song *s, *cur;
-	int   i;
+	size_t i;
 
 	cur = playlist.cursong;
 	for (i = 0; i < playlist.nsongs; i++) {
@@ -158,7 +158,7 @@ void
 dumpplaylist(int fd)
 {
 	Song *s;
-	int   i;
+	size_t i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		s = playlist.songs[i];
@@ -169,7 +169,7 @@ dumpplaylist(int fd)
 void
 clearplaylist(void)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < playlist.nsongs; i++) {
 		free(playlist.songs[i]);

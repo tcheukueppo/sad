@@ -32,7 +32,7 @@ static Outputdesc outputdescs[LEN(outputcfgs)];
 int
 initoutputs(void)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < LEN(outputcfgs); i++) {
 		outputdescs[i].name = outputcfgs[i].name;
@@ -50,7 +50,6 @@ initresampler(Format *fmt, Outputdesc *desc)
 {
 	soxr_quality_spec_t quality;
 	soxr_io_spec_t      iospec;
-	int i;
 
 	quality = soxr_quality_spec(RESAMPLEQUALITY, 0);
 	iospec = soxr_io_spec(SOXR_INT16_I, SOXR_INT16_I);
@@ -67,7 +66,6 @@ initresampler(Format *fmt, Outputdesc *desc)
 		warnx("soxr_create: failed to initialize resampler");
 		return -1;
 	}
-
 	return 0;
 }
 
@@ -75,7 +73,8 @@ int
 initresamplers(Format *fmt)
 {
 	Outputdesc *desc;
-	int i, r = 0;
+	size_t i;
+	int r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -90,8 +89,6 @@ initresamplers(Format *fmt)
 static int
 openoutput(Outputdesc *desc)
 {
-	int i;
-
 	if (desc->active)
 		return 0;
 
@@ -109,7 +106,8 @@ int
 openoutputs(void)
 {
 	Outputdesc *desc;
-	int i, r = 0;
+	size_t i;
+	int r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -124,8 +122,6 @@ openoutputs(void)
 static int
 closeoutput(Outputdesc *desc)
 {
-	int i;
-
 	if (!desc->active)
 		return 0;
 
@@ -138,7 +134,8 @@ int
 closeoutputs(void)
 {
 	Outputdesc *desc;
-	int i, r = 0;
+	size_t i;
+	int r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -160,7 +157,6 @@ playoutput(Format *fmt, Outputdesc *desc, void *buf, size_t nbytes)
 	void  *inbuf;
 	void  *outbuf;
 	float  ratio;
-	int    i;
 
 	if (!desc->active)
 		return 0;
@@ -225,7 +221,8 @@ int
 playoutputs(Format *fmt, void *inbuf, size_t nbytes)
 {
 	Outputdesc *desc;
-	int i, r = 0;
+	size_t i;
+	int r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -241,7 +238,8 @@ int
 setvol(int vol)
 {
 	Outputdesc *desc;
-	int i, r = 0;
+	size_t i;
+	int r = 0;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -257,7 +255,7 @@ int
 enableoutput(const char *name)
 {
 	Outputdesc *desc;
-	int i, r;
+	size_t i;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];
@@ -278,7 +276,7 @@ int
 disableoutput(const char *name)
 {
 	Outputdesc *desc;
-	int i;
+	size_t i;
 
 	for (i = 0; i < LEN(outputdescs); i++) {
 		desc = &outputdescs[i];

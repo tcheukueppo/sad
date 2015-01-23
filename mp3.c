@@ -88,7 +88,7 @@ mp3close(void)
 		mpg123_exit();
 	}
 	hdl = NULL;
-	return 0;
+	return r;
 }
 
 Decoder mp3decoder = {
