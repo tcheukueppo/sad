@@ -69,7 +69,7 @@ status [state]
 Query state information from the daemon.  The optional argument state
 identifies what information should be returned.  If not specified, all of the
 state information is returned.  The format of the reply is:
-"%s: %s\n", statevar, infomsg
+"%s: %s\n", statevar, stateval
 
 Possible states:
 	random: 1 if random mode is set 0 otherwise
