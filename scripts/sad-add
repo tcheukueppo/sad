@@ -2,12 +2,17 @@
 sock="/tmp/sad-sock"
 paths="$HOME/music"
 
+if ! test -S "$sock"; then
+	echo "$0: no unix domain socket at: ${sock}" >&2
+	exit 1
+fi
+
 while read -r p; do
 	# absolute paths.
 	d=$(readlink -f "$p")
 	test -d "$d" || continue
-	# find mpg, ogg, wav files in specified path
-	# make an add command and pipe it to the UDS.
+	# find mpg, ogg, flac, wav files in specified path make an add command
+	# and pipe it to the UDS.
 	find "$d" -type f \
 		\( -iname "*.mp3" -or \
 		-iname "*.ogg" -or \
