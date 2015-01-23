@@ -4,8 +4,10 @@
 #include <sys/un.h>
 
 #include <err.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,15 +21,19 @@ fd_set   rfds;
 int      fdmax;
 char    *argv0;
 
+static int listenfd = -1;
+static int isrunning = 1;
+static char *socketpath = "/tmp/sad-sock";
+
 static int
 servlisten(const char *name)
 {
 	struct sockaddr_un sun;
-	int    listenfd, r;
+	int    fd, r;
 	socklen_t len;
 
-	listenfd = socket(AF_UNIX, SOCK_STREAM, 0);
-	if (listenfd < 0)
+	fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (fd < 0)
 		err(1, "socket");
 
 	unlink(name);
@@ -37,15 +43,15 @@ servlisten(const char *name)
 	strlcpy(sun.sun_path, name, sizeof(sun.sun_path));
 
 	len = sizeof(sun);
-	r = bind(listenfd, (struct sockaddr *)&sun, len);
+	r = bind(fd, (struct sockaddr *)&sun, len);
 	if (r < 0)
 		err(1, "bind");
 
-	r = listen(listenfd, 5);
+	r = listen(fd, 5);
 	if (r < 0)
 		err(1, "listen");
 
-	return listenfd;
+	return fd;
 }
 
 static int
@@ -93,6 +99,13 @@ playaudio(void)
 }
 
 static void
+sighandler(int signum)
+{
+	if (signum == SIGINT || signum == SIGTERM)
+		isrunning = 0;
+}
+
+static void
 usage(void)
 {
 	fprintf(stderr, "usage: %s [-f sock]\n", argv0);
@@ -102,9 +115,9 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
+	struct sigaction sa;
 	struct timeval tv;
-	int    listenfd, clifd, n, i;
-	char  *socketpath = "/tmp/sad-sock";
+	int    clifd, n, i;
 
 	ARGBEGIN {
 	case 'f':
@@ -113,6 +126,12 @@ main(int argc, char *argv[])
 	default:
 		usage();
 	} ARGEND;
+
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = sighandler;
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
 
 	FD_ZERO(&master);
 	FD_ZERO(&rfds);
@@ -127,13 +146,16 @@ main(int argc, char *argv[])
 
 	playlistmode(REPEAT);
 
-	while (1) {
+	while (isrunning) {
 		rfds = master;
 		tv.tv_sec = 0;
 		tv.tv_usec = 10000;
 		n = select(fdmax + 1, &rfds, NULL, NULL, &tv);
-		if (n < 0)
+		if (n < 0) {
+			if (errno == EINTR)
+				goto fini;
 			err(1, "select");
+		}
 
 		playaudio();
 
@@ -154,5 +176,15 @@ main(int argc, char *argv[])
 			}
 		}
 	}
+fini:
+	for (i = 0; i <= fdmax; i++) {
+		if (FD_ISSET(i, &master)) {
+			close(i);
+			FD_CLR(i, &master);
+			removesubscriber(i);
+		}
+	}
+	if (listenfd != -1)
+		unlink(socketpath);
 	return 0;
 }
