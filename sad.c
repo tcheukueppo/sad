@@ -22,7 +22,7 @@ int      fdmax;
 char    *argv0;
 
 static int listenfd = -1;
-static int isrunning = 1;
+static volatile sig_atomic_t isrunning = 1;
 static char *socketpath = "/tmp/sad-sock";
 
 static int
