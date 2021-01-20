@@ -17,8 +17,8 @@ Set the output volume.  This is applied equally to all outputs.
 next
 Play next song.
 
-pause 0|1
-Pause currently playing song.
+pause [0|1]
+Pause currently playing song. Toggle pause if no argument.
 
 play [ID]
 Play the song with the given ID or the current song if no ID is provided.

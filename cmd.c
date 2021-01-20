@@ -147,36 +147,40 @@ cmdpause(int fd, char *arg)
 	const char *errstr;
 
 	if (!arg[0]) {
-		dprintf(fd, "ERR argument should be 0 or 1\n");
-		return;
-	}
+        s = getcursong();
+        if (s->state == PAUSED)
+            s->state = PLAYING;
+        else
+            s->state = PAUSED;
+	} else {
 
-	pause = strtonum(arg, 0, 1, &errstr);
-	if (errstr) {
-		dprintf(fd, "ERR argument should be 0 or 1\n");
-		return;
-	}
+        pause = strtonum(arg, 0, 1, &errstr);
+        if (errstr) {
+            dprintf(fd, "ERR argument should be 0 or 1, or no argument\n");
+            return;
+        }
 
-	s = getcursong();
-	if (!s) {
-		dprintf(fd, "ERR playlist is empty\n");
-		return;
-	}
+        s = getcursong();
+        if (!s) {
+            dprintf(fd, "ERR playlist is empty\n");
+            return;
+        }
 
-	switch (s->state) {
-	case PLAYING:
-		if (pause == 1)
-			s->state = PAUSED;
-		break;
-	case PAUSED:
-		if (pause == 0)
-			s->state = PLAYING;
-		break;
-	case NONE:
-		dprintf(fd, "ERR no song is active\n");
-		return;
-	}
-	dprintf(fd, "OK\n");
+        switch (s->state) {
+        case PLAYING:
+            if (pause == 1)
+                s->state = PAUSED;
+            break;
+        case PAUSED:
+            if (pause == 0)
+                s->state = PLAYING;
+            break;
+        case NONE:
+            dprintf(fd, "ERR no song is active\n");
+            return;
+        }
+    }
+    dprintf(fd, "OK\n");
 }
 
 static void
@@ -498,3 +502,4 @@ docmd(int clifd)
 	}
 	return 0;
 }
+
