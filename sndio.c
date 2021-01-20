@@ -8,6 +8,7 @@
 #include "sad.h"
 
 static struct sio_hdl *hdl;
+int sndiovolstatus = DEFAULTVOL;
 
 static int
 sndiovol(int vol)
@@ -16,6 +17,7 @@ sndiovol(int vol)
 		warnx("sio_setvol: failed");
 		return -1;
 	}
+    sndiovolstatus = vol;
 	return 0;
 }
 
@@ -78,8 +80,10 @@ sndioclose(void)
 }
 
 Output sndiooutput = {
+    .volstatus = &sndiovolstatus,
 	.vol = sndiovol,
 	.open = sndioopen,
 	.play = sndioplay,
 	.close = sndioclose,
 };
+

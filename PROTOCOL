@@ -78,8 +78,8 @@ Possible states:
 	songid: songid of the current song stopped on or playing
 	playback: either play, stop or pause
 	volume: 0-100
-	elapsed: total time elapsed within current song in seconds
-	duration: total song duration in seconds
+	elapsed: total time elapsed within current song in seconds (not implemented)
+	duration: total song duration in seconds (not implemented)
 
 wait event-name
 Subscribe to the provided event.  When the event triggers, a reply will

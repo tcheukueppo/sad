@@ -32,7 +32,10 @@ cmdstatus(int fd, char *arg)
 	} else if (!strncmp(arg, "single", 7)) {
 		r = 1;
 		dprintf(fd, "single: %d\n", (getplaylistmode() & SINGLE) == 1);
-	} else if (!strncmp(arg, "songid", 7)) {
+	} else if (!strncmp(arg, "volume", 7)) {
+        r = 1;
+        dprintf(fd, "volume: %d\n", getvol());
+    } else if (!strncmp(arg, "songid", 7)) {
 		r = 1;
 		s = getcursong();
 

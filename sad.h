@@ -4,6 +4,7 @@
 
 #define LEN(x) (sizeof (x) / sizeof *(x))
 #define PROTOCOLVERSION "0.0"
+#define DEFAULTVOL 100
 
 typedef struct {
 	char  *name;
@@ -40,6 +41,7 @@ typedef struct {
 } Decoder;
 
 typedef struct {
+    int *volstatus;
 	int (*vol)(int);
 	int (*open)(Format *);
 	int (*play)(void *, size_t);
@@ -127,6 +129,7 @@ int enableoutput(const char *);
 int disableoutput(const char *);
 int playoutputs(Format *, void *, size_t);
 int setvol(int);
+int getvol(void);
 
 /* notify.c */
 extern Eventdesc Eventmap[];

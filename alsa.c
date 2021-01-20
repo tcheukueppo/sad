@@ -10,6 +10,7 @@
 static snd_pcm_t *hdl;
 static int framesize;
 static const char *device = "default"; /* TODO: make configurable? */
+int alsavolstatus = DEFAULTVOL;
 
 static int
 alsavol(int vol)
@@ -51,6 +52,7 @@ alsavol(int vol)
 
 	snd_mixer_selem_get_playback_volume_range(elem, &min, &max);
 	snd_mixer_selem_set_playback_volume_all(elem, vol * max / 100);
+    alsavolstatus = vol;
 
 	snd_mixer_close(mixerhdl);
 	return 0;
@@ -115,8 +117,10 @@ alsaclose(void)
 }
 
 Output alsaoutput = {
+    .volstatus = &alsavolstatus,
 	.vol = alsavol,
 	.open = alsaopen,
 	.play = alsaplay,
 	.close = alsaclose,
 };
+

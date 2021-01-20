@@ -119,6 +119,20 @@ openoutputs(void)
 	return r;
 }
 
+int
+getvol(void)
+{
+    Outputdesc *desc;
+	size_t i;
+	for (i = 0; i < LEN(outputdescs); i++) {
+		desc = &outputdescs[i];
+		if (!desc->enabled)
+			continue;
+		return *desc->output->volstatus;
+	}
+	return -1;
+}
+
 static int
 closeoutput(Outputdesc *desc)
 {
@@ -245,8 +259,10 @@ setvol(int vol)
 		desc = &outputdescs[i];
 		if (!desc->enabled)
 			continue;
-		if (desc->output->vol(vol) < 0)
+		if (desc->output->vol(vol) < 0) {
 			r = -1;
+            *desc->output->volstatus = vol;
+        }
 	}
 	return r;
 }

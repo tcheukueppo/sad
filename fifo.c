@@ -12,6 +12,8 @@
 
 static int fifofd = -1;
 
+int fifovolstatus = DEFAULTVOL;
+
 static int
 fifovol(int vol)
 {
@@ -69,6 +71,7 @@ fifoclose(void)
 }
 
 Output fifooutput = {
+    .volstatus = &fifovolstatus,
 	.vol = fifovol,
 	.open = fifoopen,
 	.play = fifoplay,
