@@ -261,8 +261,8 @@ setvol(int vol)
 			continue;
 		if (desc->output->vol(vol) < 0) {
 			r = -1;
-            *desc->output->volstatus = vol;
         }
+        *desc->output->volstatus = vol;
 	}
 	return r;
 }
@@ -303,3 +303,4 @@ disableoutput(const char *name)
 	}
 	return -1;
 }
+
