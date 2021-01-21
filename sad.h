@@ -6,7 +6,7 @@
 #define PROTOCOLVERSION "0.0"
 #define DEFAULTVOL 100
 
-//Magic number flags to enable with.
+// Magic number flags to enable with.
 #define SNDIO 0
 #define ALSA 1
 #define FIFO 2
@@ -140,4 +140,3 @@ void s16monotostereo(short *, short *, size_t);
 void s16stereotomono(short *, short *, size_t);
 void s16tofloat(short *, float *, size_t);
 void floattos16(float *, short *, size_t);
-

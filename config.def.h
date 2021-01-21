@@ -4,7 +4,6 @@
 #define CHANNELS 2
 #define SOUNDSYS ALSA
 
-
 /*
    Only need to edit below this line if you have multiple sound backends.
 */
@@ -25,7 +24,6 @@
 #define FIFOON 0
 #endif
 
-
 Outputcfg outputcfgs[] = {
     {.name = "sndio",
      .fmt = {.bits = BITDEPTH, .rate = BITRATE, .channels = CHANNELS},
@@ -40,4 +38,3 @@ Outputcfg outputcfgs[] = {
      .enabled = FIFOON,
      .output = &fifooutput},
 };
-
