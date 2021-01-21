@@ -2,77 +2,68 @@
 #include "compat.h"
 #endif
 
-#define LEN(x) (sizeof (x) / sizeof *(x))
+#define LEN(x) (sizeof(x) / sizeof *(x))
 #define PROTOCOLVERSION "0.0"
 #define DEFAULTVOL 100
 
 typedef struct {
-	char  *name;
-	void (*fn)(int, char *);
+  char *name;
+  void (*fn)(int, char *);
 } Cmd;
 
-enum {
-	NONE,
-	PREPARE,
-	PLAYING,
-	PAUSED
-};
+enum { NONE, PREPARE, PLAYING, PAUSED };
+
+enum { REPEAT = 1 << 0, RANDOM = 1 << 1, SINGLE = 1 << 2 };
 
 enum {
-	REPEAT = 1 << 0,
-	RANDOM = 1 << 1,
-	SINGLE = 1 << 2
-};
-
-enum {
-	EVSONGFINISHED,
+  EVSONGFINISHED,
 };
 
 typedef struct {
-	unsigned int bits;
-	unsigned int rate;
-	unsigned int channels;
+  unsigned int bits;
+  unsigned int rate;
+  unsigned int channels;
 } Format;
 
 typedef struct {
-	int (*open)(Format *, const char *);
-	int (*decode)(void *, int);
-	int (*close)(void);
+  int (*open)(Format *, const char *);
+  int (*decode)(void *, int);
+  int (*close)(void);
 } Decoder;
 
 typedef struct {
-    int *volstatus;
-	int (*vol)(int);
-	int (*open)(Format *);
-	int (*play)(void *, size_t);
-	int (*close)(void);
+  int *volstatus;
+  int (*vol)(int);
+  int (*open)(Format *);
+  int (*play)(void *, size_t);
+  int (*close)(void);
 } Output;
 
 typedef struct {
-	char     path[PATH_MAX];
-	int      id;
-	int      state;
-	Decoder *decoder;
-	Format   fmt;
+  char path[PATH_MAX];
+  int id;
+  int state;
+  Decoder *decoder;
+  Format fmt;
 } Song;
 
 typedef struct {
-	Song **songs;
-	Song  *cursong;
-	size_t nsongs;
-	size_t maxsongs;
-	int    mode;
+  Song **songs;
+  Song *cursong;
+  size_t nsongs;
+  size_t maxsongs;
+  int mode;
 } Playlist;
 
 typedef struct {
-	int   event;
-	char *name;
+  int event;
+  char *name;
 } Eventdesc;
 
 /* sad.c */
-extern fd_set   master;
-extern fd_set   rfds;
-extern int      fdmax;
+extern fd_set master;
+extern fd_set rfds;
+extern int fdmax;
 
 /* cmd.c */
 int docmd(int);
